@@ -12,7 +12,7 @@
     />
 
     <!-- Main Dashboard -->
-    <div v-else class="p-4 md:p-8 h-[calc(100vh-73px)] flex flex-col">
+    <div v-else class="p-4 md:p-8 h-[calc(100vh-93px)] flex flex-col">
       <EngineHeader 
         :username="auth.username" 
         :is-loading="isLoading"
@@ -20,7 +20,7 @@
         @logout="logout" 
       />
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 grow overflow-hidden pb-4 mt-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 grow overflow-hidden pb-4 mt-2">
         
         <!-- Left Side: Data Forms -->
         <section class="lg:col-span-7 overflow-y-auto pr-2 space-y-6 pb-20 custom-scrollbar relative">
