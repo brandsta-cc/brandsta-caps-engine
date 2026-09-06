@@ -1,35 +1,39 @@
 <!-- components/EngineHeader.vue -->
 <template>
-  <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm mb-2">
-    <div>
-      <h2 class="text-xl font-bold text-slate-900 dark:text-white">Hotel CAPS Specials</h2>
-      <p class="text-teal-600 dark:text-teal-400 text-sm font-semibold mt-1">Target Account: {{ username }}</p>
+  <div class="flex flex-col md:flex-row justify-between items-center bg-[#030712] p-5 rounded-xl border border-slate-800/80 shadow-sm mb-2 gap-3 md:gap-0">
+    
+    <!-- Title: Centered on mobile, left-aligned on desktop -->
+    <div class="text-center md:text-left w-full md:w-auto">
+      <h2 class="text-lg md:text-xl font-bold text-white tracking-wide">Hotel CAPS Specials</h2>
     </div>
     
-    <div class="flex gap-3 mt-4 md:mt-0 w-full md:w-auto">
+    <!-- Buttons: Flex row on mobile to save height, matching Brandsta blue -->
+    <div class="flex gap-2 md:gap-3 w-full md:w-auto">
       <button 
         @click="$emit('post')" 
         :disabled="isLoading"
-        class="flex-1 md:flex-none bg-teal-600 hover:bg-teal-500 text-white px-6 py-2.5 rounded-lg font-bold transition-colors shadow-md cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        class="flex-1 md:flex-none bg-[#0068fe] hover:bg-blue-600 text-white px-4 md:px-6 py-2 md:py-2.5 rounded-lg font-bold transition-colors shadow-md cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm md:text-base"
       >
         <span v-if="isLoading" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-        {{ isLoading ? 'Publishing...' : 'Post to WordPress' }}
+        {{ isLoading ? 'Publishing...' : 'Post Live' }}
       </button>
+      
       <button 
         @click="$emit('logout')" 
         :disabled="isLoading"
-        class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-5 py-2.5 rounded-lg font-semibold transition-colors border border-slate-300 dark:border-slate-700 cursor-pointer disabled:opacity-50"
+        class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 md:px-5 py-2 md:py-2.5 rounded-lg font-semibold transition-colors border border-slate-700 cursor-pointer disabled:opacity-50 text-sm md:text-base whitespace-nowrap"
       >
         Log Out
       </button>
     </div>
+    
   </div>
 </template>
 
 <script setup>
 defineProps({
-  username: { type: String, required: true },
   isLoading: { type: Boolean, default: false }
 })
+// Removed the 'username' prop since we deleted the target account text
 defineEmits(['post', 'logout'])
 </script>

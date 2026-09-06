@@ -1,17 +1,18 @@
 <!-- components/LivePayload.vue -->
 <template>
-  <section class="hidden lg:flex flex-col h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm dark:shadow-2xl overflow-hidden relative transition-colors">
+  <section class="hidden lg:flex flex-col h-full bg-slate-900/50 border border-slate-800/80 rounded-xl shadow-2xl overflow-hidden relative transition-colors backdrop-blur-sm">
     
-    <div class="bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex justify-between items-center z-20">
-      <h2 class="text-xs font-bold text-teal-600 dark:text-teal-500 uppercase tracking-wider flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+    <div class="bg-[#030712] border-b border-slate-800/80 px-6 py-4 flex justify-between items-center z-20">
+      <h2 class="text-xs font-bold text-[#0068fe] uppercase tracking-wider flex items-center gap-2">
+        <!-- Live indicator with Brandsta blue glow -->
+        <span class="w-2 h-2 rounded-full bg-[#0068fe] animate-pulse shadow-[0_0_8px_#0068fe]"></span>
         Live JSON Payload
       </h2>
-      <span class="text-xs font-semibold text-slate-500 bg-slate-200 dark:bg-slate-800 px-2 py-1 rounded">Read-Only</span>
+      <span class="text-xs font-semibold text-slate-400 bg-slate-800 px-2 py-1 rounded">Read-Only</span>
     </div>
     
     <div class="p-6 overflow-y-auto grow custom-scrollbar z-20">
-      <pre class="text-slate-800 dark:text-slate-300 font-mono text-xs whitespace-pre-wrap leading-relaxed">{{ formattedJson }}</pre>
+      <pre class="text-slate-300 font-mono text-xs whitespace-pre-wrap leading-relaxed">{{ formattedJson }}</pre>
     </div>
 
   </section>

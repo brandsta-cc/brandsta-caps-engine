@@ -216,4 +216,51 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload)
 })
+
+// 1. Core Meta Values
+const pageTitle = 'Hotel CAPS Data Engine - Brandsta'
+const pageDesc = 'Secure headless data engine for Hotel CAPS managed by Brandsta Interactive.'
+const canonicalUrl = 'https://caps.brandsta.cc/'
+const ogImage = 'https://caps.brandsta.cc/images/caps-brandsta-og-image.jpg'
+
+// 2. Structured Link and Global Injection
+useHead({
+  link: [
+    { rel: 'canonical', href: canonicalUrl }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "CAPS Data Engine",
+        "description": pageDesc,
+        "url": canonicalUrl,
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "provider": {
+          "@type": "Organization",
+          "name": "Brandsta Interactive",
+          "url": "https://brandsta.in"
+        }
+      })
+    }
+  ]
+})
+
+// 3. Nuxt 4 Composable mapping both Search Engines and Social Cards
+useSeoMeta({
+  title: pageTitle,
+  description: pageDesc,
+  robots: 'noindex, nofollow', // Double-locking privacy at the page level
+  ogTitle: pageTitle,
+  ogDescription: pageDesc,
+  ogUrl: canonicalUrl,
+  ogImage: ogImage,
+  twitterCard: 'summary_large_image',
+  twitterTitle: pageTitle,
+  twitterDescription: pageDesc,
+  twitterImage: ogImage
+})
 </script>
