@@ -111,7 +111,11 @@ const uploadImage = async () => {
       headers: { 'Authorization': `Basic ${props.authHeader}` },
       body: formData
     })
-    emit('update:image', res.url)
+    
+    // Intercept and upgrade the URL to HTTPS safely
+    const secureUrl = res.url ? res.url.replace(/^http:\/\//i, 'https://') : null
+    
+    emit('update:image', secureUrl)
     selectedFile.value = null
     statusMsg.value = 'Upload successful!'
     statusType.value = 'success'
