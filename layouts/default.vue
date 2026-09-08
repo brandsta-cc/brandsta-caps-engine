@@ -6,7 +6,7 @@
     <header class="relative bg-[#030712] border-b border-slate-800/80 px-6 py-4 z-50 shadow-2xl overflow-hidden">
       
       <!-- Subtle top border connecting the brand colors -->
-      <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-500 via-slate-800 to-[#0068fe] opacity-80"></div>
+      <div class="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-amber-500 via-slate-800 to-[#0068fe] opacity-80"></div>
       
       <div class="w-full flex justify-between items-center">
         
@@ -46,7 +46,7 @@
     </header>
 
     <!-- Page Content Injection -->
-    <main class="flex-grow relative z-10">
+    <main class="grow relative z-10">
       <slot />
     </main>
     

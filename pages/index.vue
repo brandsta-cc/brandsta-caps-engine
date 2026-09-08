@@ -51,6 +51,25 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 
+// -- SAFE STORAGE WRAPPER --
+const safeStorage = {
+  get(key) {
+    if (typeof window === 'undefined') return null
+    try { return window.localStorage.getItem(key) }
+    catch (e) { return null }
+  },
+  set(key, value) {
+    if (typeof window === 'undefined') return
+    try { window.localStorage.setItem(key, value) }
+    catch (e) { console.warn('Storage disabled by browser settings. Proceeding in memory.') }
+  },
+  remove(key) {
+    if (typeof window === 'undefined') return
+    try { window.localStorage.removeItem(key) }
+    catch (e) {}
+  }
+}
+
 // -- STATE --
 const isLoggedIn = ref(false)
 const isLoading = ref(false)
@@ -66,9 +85,9 @@ const auth = ref({
 const specials = ref([])
 const authHeader = computed(() => btoa(`${auth.value.username}:${auth.value.password}`))
 
-// -- AUTH & FETCH (Public API Bypasses WAF for GET) --
+// -- AUTH & FETCH --
 const checkLocalAuth = () => {
-  const savedPass = localStorage.getItem('caps_app_pass')
+  const savedPass = safeStorage.get('caps_app_pass')
   if (savedPass) {
     auth.value.password = savedPass
     authenticate()
@@ -86,12 +105,18 @@ const authenticate = async () => {
   }
 
   try {
-    const wpUrl = 'https://public-api.wordpress.com/wp/v2/sites/hotelcapsfamily.wordpress.com/pages?slug=specials-data'
-    const response = await fetch(wpUrl, {
+    // 1. THE DEADBOLT: Test the password using our new XML-RPC proxy
+    await $fetch('/api/verify', {
+      method: 'POST',
       headers: { 'Authorization': `Basic ${authHeader.value}` }
     })
-
-    if (!response.ok) throw new Error('Invalid App Password or API Blocked.')
+    
+    // 2. THE FETCH: If we didn't throw an error above, the password is perfect.
+    // Fetch the data without auth headers so WP.com doesn't block it.
+    const wpUrl = 'https://public-api.wordpress.com/wp/v2/sites/hotelcapsfamily.wordpress.com/pages?slug=specials-data'
+    const response = await fetch(wpUrl)
+    
+    if (!response.ok) throw new Error('Failed to retrieve target page data.')
     
     const data = await response.json()
     
@@ -118,14 +143,15 @@ const authenticate = async () => {
         image: item.image || null
       }))
 
-      localStorage.setItem('caps_app_pass', auth.value.password)
+      safeStorage.set('caps_app_pass', auth.value.password)
       isLoggedIn.value = true
       setTimeout(() => { isDirty.value = false }, 100)
     } else {
       throw new Error('Target page not found in WordPress.')
     }
   } catch (err) {
-    globalError.value = err.message
+    // Extracts the exact failure message from XML-RPC
+    globalError.value = err.data?.statusMessage || err.message
     logout()
   } finally {
     isLoading.value = false
@@ -133,7 +159,7 @@ const authenticate = async () => {
 }
 
 const logout = () => {
-  localStorage.removeItem('caps_app_pass')
+  safeStorage.remove('caps_app_pass')
   auth.value.password = ''
   isLoggedIn.value = false
   specials.value = []
@@ -182,7 +208,7 @@ const postToWordPress = async () => {
           price: item.price || null,
           isVeg: item.isVeg,
           description: item.description || null,
-          image: item.image || null
+          image: item.image ? item.image.replace(/^http:\/\//i, 'https://') : null
         }))
       }
     })
