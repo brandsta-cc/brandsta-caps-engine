@@ -208,7 +208,7 @@ const postToWordPress = async () => {
           price: item.price || null,
           isVeg: item.isVeg,
           description: item.description || null,
-          image: item.image ? item.image.replace(/^http:\/\//i, 'https://') : null
+          // image: item.image ? item.image.replace(/^http:\/\//i, 'https://') : null
         }))
       }
     })

@@ -32,7 +32,7 @@ const formattedJson = computed(() => {
     price: item.price || null,
     isVeg: item.isVeg,
     description: item.description || null,
-    image: item.image || null
+    // image: item.image || null
   }))
   return JSON.stringify(cleanPayload, null, 2)
 })
