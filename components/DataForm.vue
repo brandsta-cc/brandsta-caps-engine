@@ -71,16 +71,16 @@
           <input 
             v-model="item.description" 
             type="text" 
-            maxlength="40" 
+            maxlength="30" 
             placeholder="Offers / Details..." 
             class="w-full bg-[#030712] border border-slate-800 rounded-lg px-4 py-2.5 pr-16 text-white focus:outline-none focus:border-[#0068fe] transition-colors placeholder-slate-600" 
           />
           <!-- Character Counter -->
           <span 
             class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono transition-colors"
-            :class="(item.description?.length || 0) >= 35 ? 'text-amber-500' : 'text-slate-500'"
+            :class="(item.description?.length || 0) >= 25 ? 'text-amber-500' : 'text-slate-500'"
           >
-            {{ item.description?.length || 0 }}/40
+            {{ item.description?.length || 0 }}/30
           </span>
         </div>
       </div>
