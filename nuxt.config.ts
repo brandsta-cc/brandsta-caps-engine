@@ -6,6 +6,21 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-08-20',
   devtools: { enabled: false },
 
+  // Add the fonts module here
+  modules: ['@nuxt/fonts'],
+
+  // 2. NOW TYPESCRIPT WILL RECOGNIZE THIS BLOCK:
+  fonts: {
+    defaults: {
+      styles: ['normal'], 
+      subsets: ['latin'],
+    },
+    families: [
+      { name: 'Inter', provider: 'google', weights: [400, 500, 600, 700], global: true },
+      { name: 'Faculty Glyphic', provider: 'google', weights: [400, 600, 700], global: true },
+    ]
+  },
+
   // 2. Styling & Vite Plugins
   css: ['~/assets/css/main.css'],
   vite: {
@@ -30,7 +45,6 @@ export default defineNuxtConfig({
       
       meta: [
         { name: 'description', content: 'Secure headless data engine for Hotel CAPS managed by Brandsta Interactive.' },
-        
         // CRITICAL: Prevents search engines from indexing this private tool
         { name: 'robots', content: 'noindex, nofollow' },
         { name: 'author', content: 'kriz - https://brandsta.in' },
@@ -50,7 +64,7 @@ export default defineNuxtConfig({
         { property: 'og:image:type', content: 'image/jpeg' },
         { property: 'twitter:card', content: 'summary_large_image' },
 
-        // Windows PWA & Mobile Meta Tags (Updated to your dark theme hex)
+        // Windows PWA & Mobile Meta Tags
         { name: 'msapplication-TileColor', content: '#030712' },
         { name: 'msapplication-TileImage', content: '/images/favicons/ms-icon-144x144.png' },
         { name: 'theme-color', content: '#030712' },
@@ -81,7 +95,6 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/images/favicons/favicon-32x32.png' },
         { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/images/favicons/favicon-96x96.png' },
         { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/images/favicons/favicon-16x16.png' },
-        // Cache-Busted Web Manifest Path
         { rel: 'manifest', crossorigin: 'use-credentials', href: 'manifest.json' }
       ]
     }

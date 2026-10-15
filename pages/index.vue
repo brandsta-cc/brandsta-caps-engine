@@ -12,46 +12,77 @@
     />
 
     <!-- Main Dashboard -->
-    <div v-else class="p-4 md:p-8 h-[calc(100vh-93px)] flex flex-col">
+    <div v-else class="p-3 sm:p-4 md:p-8 min-h-[calc(100vh-93px)] lg:h-[calc(100vh-93px)] flex flex-col">
       <EngineHeader 
         :username="auth.username" 
         :is-loading="isLoading"
+        :item-count="specials.length"
         @post="postToWordPress" 
-        @logout="logout" 
+        @logout="logout"
+        @open-preview="isPreviewOpen = true"
+        @open-import="openImportModal('import')"
+        @open-guide="openImportModal('guide')"
       />
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 grow overflow-hidden pb-4 mt-2">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 grow lg:overflow-hidden pb-4 mt-3">
         
-        <!-- Left Side: Data Forms -->
-        <section class="lg:col-span-7 overflow-y-auto pr-2 space-y-6 pb-20 custom-scrollbar relative">
-          <DataForm 
-            v-for="(item, index) in specials" 
-            :key="item.id" 
-            :item="item" 
-            :auth-header="authHeader" 
-            @remove="removeSpecial(index)" 
-          />
+        <!-- Left Side: Reorderable Data Forms -->
+        <section 
+          id="scroll-container"
+          @dragover.prevent="onContainerDragOver"
+          class="lg:col-span-7 lg:overflow-y-auto lg:pr-2 space-y-4 sm:space-y-6 pb-20 custom-scrollbar relative"
+        >
+          <TransitionGroup name="list" tag="div" class="space-y-4 sm:space-y-6">
+            <DataForm 
+              v-for="(item, index) in specials" 
+              :key="item.id" 
+              :id="'item-' + item.id"
+              :item="item" 
+              :index="index"
+              :total="specials.length"
+              :auth-header="authHeader" 
+              @remove="removeSpecial(index)"
+              @move-up="moveSpecial(index, index - 1)"
+              @move-down="moveSpecial(index, index + 1)"
+              @drag-reorder="({ from, to }) => moveSpecial(from, to)"
+            />
+          </TransitionGroup>
 
           <button 
             @click="addNewSpecial" 
-            class="w-full py-4 bg-white dark:bg-slate-900 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-teal-500 dark:hover:border-teal-500 text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 font-bold rounded-xl transition-all shadow-sm cursor-pointer"
+            class="w-full py-4 bg-slate-900 border-2 border-dashed border-slate-700 hover:border-teal-500 text-slate-400 hover:text-teal-400 font-bold rounded-xl transition-all shadow-sm cursor-pointer"
           >
             + Add New Menu Item
           </button>
         </section>
 
-        <!-- Right Side: Live Payload -->
+        <!-- Right Side: Live Payload (Desktop Only) -->
         <LivePayload class="lg:col-span-5" :specials="specials" />
         
       </div>
     </div>
+
+    <!-- JSON Import & AI Guide Modal -->
+    <JsonImportModal
+      :is-open="isImportOpen"
+      :initial-tab="importModalTab"
+      @close="isImportOpen = false"
+      @load-json="handleJsonLoaded"
+    />
+
+    <!-- 9:16 Specials Poster Preview & Download Modal -->
+    <SpecialsPreviewModal
+      :is-open="isPreviewOpen"
+      :specials="specials"
+      @close="isPreviewOpen = false"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 
-// -- SAFE STORAGE WRAPPER --
+// -- SAFE STORAGE WRAPPER (Only for WP App Password) --
 const safeStorage = {
   get(key) {
     if (typeof window === 'undefined') return null
@@ -76,6 +107,16 @@ const isLoading = ref(false)
 const globalError = ref('')
 const isDirty = ref(false)
 const PAGE_ID = ref(null)
+
+// Modal States
+const isImportOpen = ref(false)
+const importModalTab = ref('import')
+const isPreviewOpen = ref(false)
+
+const openImportModal = (tab = 'import') => {
+  importModalTab.value = tab
+  isImportOpen.value = true
+}
 
 const auth = ref({
   username: 'hotelcapsfamily',
@@ -105,14 +146,11 @@ const authenticate = async () => {
   }
 
   try {
-    // 1. THE DEADBOLT: Test the password using our new XML-RPC proxy
     await $fetch('/api/verify', {
       method: 'POST',
       headers: { 'Authorization': `Basic ${authHeader.value}` }
     })
     
-    // 2. THE FETCH: If we didn't throw an error above, the password is perfect.
-    // Fetch the data without auth headers so WP.com doesn't block it.
     const wpUrl = 'https://public-api.wordpress.com/wp/v2/sites/hotelcapsfamily.wordpress.com/pages?slug=specials-data'
     const response = await fetch(wpUrl)
     
@@ -150,7 +188,6 @@ const authenticate = async () => {
       throw new Error('Target page not found in WordPress.')
     }
   } catch (err) {
-    // Extracts the exact failure message from XML-RPC
     globalError.value = err.data?.statusMessage || err.message
     logout()
   } finally {
@@ -167,11 +204,11 @@ const logout = () => {
   isDirty.value = false
 }
 
-// -- DATA MUTATIONS --
+// -- DATA MUTATIONS & ORDERING --
 const addNewSpecial = () => {
   specials.value.push({
-    id: Date.now(),
-    category: 'Multi-Cuisine Restaurant',
+    id: Date.now() + Math.random(),
+    category: 'Multi Cuisine Restaurant',
     name: '',
     price: null,
     isVeg: true,
@@ -186,6 +223,70 @@ const removeSpecial = (index) => {
   }
 }
 
+// -- NATIVE CENTERING ENGINE --
+const moveSpecial = async (fromIndex, toIndex) => {
+  if (toIndex < 0 || toIndex >= specials.value.length || fromIndex === toIndex) return
+  
+  const updated = [...specials.value]
+  const [movedItem] = updated.splice(fromIndex, 1)
+  updated.splice(toIndex, 0, movedItem)
+  specials.value = updated
+
+  // Wait for Vue's virtual DOM
+  await nextTick()
+  
+  // 50ms buffer ensures mobile layout shifts settle before scrolling
+  setTimeout(() => {
+    const el = document.getElementById('item-' + movedItem.id)
+    if (el) {
+      // Native browser API perfectly centers the element on all devices
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+      // Visual tracking flash
+      el.classList.add('ring-2', 'ring-[#0068fe]', 'ring-offset-2', 'ring-offset-[#030712]')
+      setTimeout(() => {
+        el.classList.remove('ring-2', 'ring-[#0068fe]', 'ring-offset-2', 'ring-offset-[#030712]')
+      }, 850)
+    }
+  }, 50)
+}
+
+// -- 2. PROXIMITY SCROLL ENGINE (For Drag & Drop Edge Scrolling) --
+const onContainerDragOver = (e) => {
+  const container = document.getElementById('scroll-container')
+  if (!container) return
+
+  const rect = container.getBoundingClientRect()
+  // Support both mouse and touch Y-coordinates
+  const clientY = e.clientY || (e.touches && e.touches[0].clientY)
+  if (!clientY) return
+
+  const y = clientY - rect.top
+  
+  // The Activation Zone: If the cursor is within 120px of the top or bottom, force a scroll
+  const threshold = 120 
+
+  if (y < threshold) {
+    container.scrollBy({ top: -14, behavior: 'auto' })
+  } else if (y > rect.height - threshold) {
+    // Scrolling Down
+    container.scrollBy({ top: 14, behavior: 'auto' })
+  }
+}
+
+const handleJsonLoaded = ({ items, mode }) => {
+  if (mode === 'append') {
+    specials.value.push(...items)
+  } else {
+    specials.value = items
+  }
+}
+
+const toTitleCase = (str) => {
+  if (!str) return '';
+  return String(str).trim().toLowerCase().split(/\s+/).map(w => w ? w.charAt(0).toUpperCase() + w.slice(1) : '').join(' ');
+}
+
 // -- POST TO WORDPRESS (Via Nitro Server) --
 const postToWordPress = async () => {
   for (let i = 0; i < specials.value.length; i++) {
@@ -197,18 +298,17 @@ const postToWordPress = async () => {
 
   isLoading.value = true
   try {
-    const response = await $fetch('/api/save', {
+    await $fetch('/api/save', {
       method: 'POST',
       headers: { 'Authorization': `Basic ${authHeader.value}` },
       body: { 
         pageId: PAGE_ID.value,
         payload: specials.value.map(item => ({
           category: item.category,
-          name: item.name,
+          name: toTitleCase(item.name),
           price: item.price || null,
           isVeg: item.isVeg,
-          description: item.description || null,
-          // image: item.image ? item.image.replace(/^http:\/\//i, 'https://') : null
+          description: item.description || null
         }))
       }
     })
@@ -243,17 +343,13 @@ onBeforeUnmount(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload)
 })
 
-// 1. Core Meta Values
 const pageTitle = 'Hotel CAPS Data Engine - Brandsta'
 const pageDesc = 'Secure headless data engine for Hotel CAPS managed by Brandsta Interactive.'
 const canonicalUrl = 'https://caps.brandsta.cc/'
 const ogImage = 'https://caps.brandsta.cc/images/caps-brandsta-og-image.jpg'
 
-// 2. Structured Link and Global Injection
 useHead({
-  link: [
-    { rel: 'canonical', href: canonicalUrl }
-  ],
+  link: [{ rel: 'canonical', href: canonicalUrl }],
   script: [
     {
       type: 'application/ld+json',
@@ -275,11 +371,10 @@ useHead({
   ]
 })
 
-// 3. Nuxt 4 Composable mapping both Search Engines and Social Cards
 useSeoMeta({
   title: pageTitle,
   description: pageDesc,
-  robots: 'noindex, nofollow', // Double-locking privacy at the page level
+  robots: 'noindex, nofollow',
   ogTitle: pageTitle,
   ogDescription: pageDesc,
   ogUrl: canonicalUrl,
@@ -290,3 +385,16 @@ useSeoMeta({
   twitterImage: ogImage
 })
 </script>
+
+<style scoped>
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(12px);
+}
+</style>
