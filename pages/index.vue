@@ -32,6 +32,14 @@
           @dragover.prevent="onContainerDragOver"
           class="lg:col-span-7 lg:overflow-y-auto lg:pr-2 space-y-4 sm:space-y-6 pb-20 custom-scrollbar relative"
         >
+        
+          <button 
+            @click="addNewSpecial" 
+            class="w-full py-4 bg-slate-900 border-2 border-dashed border-slate-700 hover:border-teal-500 text-slate-400 hover:text-teal-400 font-bold rounded-xl transition-all shadow-sm cursor-pointer"
+          >
+            + Add New Menu Item
+          </button>
+          
           <TransitionGroup name="list" tag="div" class="space-y-4 sm:space-y-6">
             <DataForm 
               v-for="(item, index) in specials" 
@@ -48,12 +56,6 @@
             />
           </TransitionGroup>
 
-          <button 
-            @click="addNewSpecial" 
-            class="w-full py-4 bg-slate-900 border-2 border-dashed border-slate-700 hover:border-teal-500 text-slate-400 hover:text-teal-400 font-bold rounded-xl transition-all shadow-sm cursor-pointer"
-          >
-            + Add New Menu Item
-          </button>
         </section>
 
         <!-- Right Side: Live Payload (Desktop Only) -->
