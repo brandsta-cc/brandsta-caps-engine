@@ -46,7 +46,7 @@ export default defineNuxtConfig({
       meta: [
         { name: 'description', content: 'Secure headless data engine for Hotel CAPS managed by Brandsta Interactive.' },
         // CRITICAL: Prevents search engines from indexing this private tool
-        { name: 'robots', content: 'noindex, nofollow' },
+        // { name: 'robots', content: 'noindex, nofollow' },
         { name: 'author', content: 'kriz - https://brandsta.in' },
 
         // Geographic Coordinates
