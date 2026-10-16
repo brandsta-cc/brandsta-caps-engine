@@ -14,9 +14,12 @@
     <!-- Main Dashboard -->
     <div v-else class="p-3 sm:p-4 md:p-8 min-h-[calc(100vh-93px)] lg:h-[calc(100vh-93px)] flex flex-col">
       <EngineHeader 
-        :username="auth.username" 
-        :is-loading="isLoading"
-        :item-count="specials.length"
+        :username="auth.username"
+        :isLoading="isLoading"
+        :itemCount="specials.length"
+        :hasCapsCategory="hasCapsCategory"
+        v-model:capsTitle="capsTitle"
+        v-model:capsDate="capsDate"
         @post="postToWordPress" 
         @logout="logout"
         @open-preview="isPreviewOpen = true"
@@ -76,6 +79,8 @@
     <SpecialsPreviewModal
       :is-open="isPreviewOpen"
       :specials="specials"
+      v-model:capsTitle="capsTitle"
+      v-model:capsDate="capsDate"
       @close="isPreviewOpen = false"
     />
   </div>
@@ -83,6 +88,30 @@
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
+
+// Add these variables to store your global campaign logic
+const capsTitle = ref('SEASONAL SPECIALS')
+const capsDate = ref('ALL SEASON')
+
+// This instantly detects if ANY item in the array is a CAPS item
+const hasCapsCategory = computed(() => {
+  return specials.value.some(item => item.category === 'CAPS')
+})
+
+// Update your livePayload computed property (or your save function) to inject the fields
+const livePayload = computed(() => {
+  return specials.value.map(item => {
+    if (item.category === 'CAPS') {
+      // Inject the global campaign data strictly into CAPS objects
+      return { 
+        ...item, 
+        customTitle: capsTitle.value, 
+        customDate: capsDate.value 
+      }
+    }
+    return item
+  })
+})
 
 // -- SAFE STORAGE WRAPPER (Only for WP App Password) --
 const safeStorage = {

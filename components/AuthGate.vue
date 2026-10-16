@@ -14,6 +14,7 @@
           <label for="auth-username" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Username</label>
           <input 
             id="auth-username"
+            name="authUsername"
             v-model="internalAuth.username" 
             type="text" 
             :disabled="isLoading"
@@ -25,6 +26,7 @@
           <div class="relative">
             <input 
               id="auth-password"
+              name="authPassword"
               v-model="internalAuth.password" 
               :type="showPassword ? 'text' : 'password'" 
               :disabled="isLoading"

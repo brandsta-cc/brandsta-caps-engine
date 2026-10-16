@@ -6,6 +6,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-08-20',
   devtools: { enabled: false },
 
+
   // Add the fonts module here
   modules: ['@nuxt/fonts'],
 
@@ -22,7 +23,10 @@ export default defineNuxtConfig({
   },
 
   // 2. Styling & Vite Plugins
-  css: ['~/assets/css/main.css'],
+  
+  css: [
+    '~/assets/css/main.css' // Make sure the path matches your actual folder structure
+  ],
   vite: {
     plugins: [
       tailwindcss(),

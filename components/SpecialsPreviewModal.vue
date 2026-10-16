@@ -23,13 +23,35 @@
 
         <!-- Editable Poster Date -->
         <div class="flex items-center gap-1.5 grow sm:grow-0 justify-end">
-          <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 hidden md:inline">Date:</label>
-          <input
-            v-model="customDateText"
-            type="text"
-            class="bg-[#030712] border border-slate-700 focus:border-amber-500 rounded-lg px-2.5 py-1 text-xs font-mono text-amber-200 w-44 sm:w-56 text-center focus:outline-none"
-            placeholder="THURSDAY · 15 OCT 2026"
-          />
+          <label :for="isCurrentSlideCaps ? 'campaignDateInput' : 'outletDateInput'" class="text-[11px] font-bold uppercase tracking-wider text-slate-400 hidden md:inline">Date:</label>
+          <!-- Conditional Title/Date Editor in Preview -->
+          <div class="flex items-center gap-2 sm:gap-3 mr-2 sm:mr-4">            
+            <!-- CAPS Campaign Date (Binds to the prop from parent) -->
+            <input 
+              v-if="isCurrentSlideCaps"
+              :value="capsDate" 
+              id="campaignDateInput"
+              name="campaignDate"
+              @input="$emit('update:capsDate', $event.target.value)"
+              type="text"
+              maxlength="30"
+              aria-label="Campaign Date"
+              class="bg-[#030712] border border-slate-800 rounded-md px-3 py-1 text-xs text-amber-50 focus:outline-none focus:border-[#0068fe] transition-colors font-mono uppercase text-center w-[160px] sm:w-[220px] h-7 sm:h-8"
+            />
+            
+            <!-- Standard Outlet Date (Binds to your local customDateText) -->
+            <input 
+              v-else
+              v-model="customDateText" 
+              :placeholder="getFormattedToday()"
+              id="outletDateInput"
+              name="outletDate"
+              maxlength="30"
+              type="text"
+              aria-label="Poster Date"
+              class="bg-[#030712] border border-slate-800 rounded-md px-3 py-1 text-xs text-amber-50 focus:outline-none focus:border-[#0068fe] transition-colors font-mono uppercase text-center w-[160px] sm:w-[220px] h-7 sm:h-8"
+            />
+          </div>
           <button
             type="button"
             @click="$emit('close')"
@@ -164,10 +186,19 @@ import { ref, computed, watch, onUnmounted } from 'vue'
 
 const props = defineProps({
   isOpen: { type: Boolean, default: false },
-  specials: { type: Array, default: () => [] }
+  specials: { type: Array, required: true },
+  capsTitle: { type: String, default: 'SEASONAL SPECIALS' },
+  capsDate: { type: String, default: 'ALL SEASON' }
 })
 
-defineEmits(['close'])
+const emit = defineEmits(['close', 'update:capsTitle', 'update:capsDate'])
+
+// This dynamically updates whenever activeIndex / currentSlide changes
+const isCurrentSlideCaps = computed(() => {
+  const thisSlide = currentSlide?.value || {}
+  const rawCategory = thisSlide.category || thisSlide.categoryLabel || thisSlide.name || ''
+  return String(rawCategory).trim().toUpperCase() === 'CAPS'
+})
 
 const toTitleCase = (str) => {
   if (!str) return '';
@@ -521,21 +552,33 @@ const renderSlideToCanvas = async (slide) => {
   drawTrackedTextCenter(ctx, cfg.subtitle, 450, 349, 6)
   drawOrnamentalLine(ctx, 450, 370, 360, cfg.accentColor)
 
-  // 5. "TODAY’S SPECIALS" with subtle ~5px total string tracking (0.35px/char)
+  // 5. Dynamic Header (Uses Campaign Title for CAPS, defaults to TODAY'S SPECIALS)
+  // Check the SPECIFIC slide being drawn, not the global active slide
+  const rawCat = slide.category || slide.categoryLabel || slide.name || ''
+  const isCapsSlide = String(rawCat).trim().toUpperCase() === 'CAPS'
+
+  const headerText = isCapsSlide && props.capsTitle
+    ? String(props.capsTitle).toUpperCase() 
+    : "TODAY’S SPECIALS"
+
   ctx.save()
   ctx.shadowColor = 'rgba(0, 0, 0, 0.35)'
   ctx.shadowBlur = 12
   ctx.fillStyle = cfg.headingColor
-  ctx.font = '700 72px "Faculty Glyphic", serif'
-  drawTrackedTextCenter(ctx, "TODAY’S SPECIALS", 450, 450, 0.35)
+  ctx.font = isCapsSlide ? '700 66px "Faculty Glyphic", serif' : '700 72px "Faculty Glyphic", serif'
+  drawTrackedTextCenter(ctx, headerText, 450, 450, 0.35)
   ctx.restore()
 
   drawOrnamentalLine(ctx, 450, 480, 450, cfg.accentColor)
 
-  // 6. Date
+  // 6. Dynamic Date (Uses Campaign Date for CAPS, defaults to daily override/formatted date)
+  const dateText = isCapsSlide && props.capsDate
+    ? String(props.capsDate).toUpperCase()
+    : (customDateText.value || getFormattedToday()).toUpperCase()
+
   ctx.fillStyle = cfg.dateColor
   ctx.font = '500 24px "Inter", sans-serif'
-  drawTrackedTextCenter(ctx, (customDateText.value || getFormattedToday()).toUpperCase(), 450, 524, 4)
+  drawTrackedTextCenter(ctx, dateText, 450, 524, 4)
 
   // 7. Menu Items Stage (Cases 1 to 6 — Bumped ~8-10% on Title & ~15% on Offer/Description)
   const items = slide.items
@@ -555,7 +598,7 @@ const renderSlideToCanvas = async (slide) => {
   const stageHeight = stageBottom - stageTop
   const cardH = Math.min(stageHeight, count * scaleConfig.rowH + scaleConfig.padY * 2)
   const cardY = stageTop + (stageHeight - cardH) / 2
-  const cardX = 48
+  const cardX = 40
   const cardW = 900 - cardX * 2
 
   ctx.save()
@@ -574,7 +617,7 @@ const renderSlideToCanvas = async (slide) => {
     const hasPrice = Boolean(item.price && String(item.price).trim())
 
     // Veg / Non-Veg Badge
-    const iconX = cardX + 38
+    const iconX = cardX + 28
     const iconS = scaleConfig.iconSize
     const iconY = rowCenterY - iconS / 2
     const badgeColor = item.isVeg ? '#22c55e' : '#ef4444'
@@ -589,8 +632,8 @@ const renderSlideToCanvas = async (slide) => {
     ctx.fill()
     ctx.restore()
 
-    const textLeftX = iconX + iconS + 26
-    const dividerX = cardX + cardW - 182 
+    const textLeftX = iconX + iconS + 24
+    const dividerX = cardX + cardW - 125 
     const maxTextW = hasPrice ? (dividerX - textLeftX - 18) : (cardX + cardW - 36 - textLeftX)
 
     // Dish Title & Offer Description
@@ -610,13 +653,14 @@ const renderSlideToCanvas = async (slide) => {
 
     // Price & Vertical Divider
     if (hasPrice) {
-      const rawPrice = String(item.price).replace(/₹/g, '').trim()
       
       // Strict check: if rawPrice contains ONLY numbers, it's numeric. 
       // If it has letters (like "Free" or "TBD"), it skips the currency symbol.
+      const rawPrice = String(item.price).replace(/₹/g, '').trim()
       const isNumeric = /^\d+$/.test(rawPrice)
       const finalPriceText = isNumeric ? `₹${rawPrice}` : rawPrice
 
+      // 1. Draw the Vertical Divider
       ctx.save()
       ctx.strokeStyle = cfg.accentColor
       ctx.lineWidth = 1.6
@@ -626,10 +670,32 @@ const renderSlideToCanvas = async (slide) => {
       ctx.stroke()
       ctx.restore()
 
+      // 2. Setup Price Typography
+      ctx.save()
       ctx.fillStyle = '#ffffff'
       ctx.font = `600 ${scaleConfig.priceSize}px "Faculty Glyphic", serif`
-      // Right-aligned relative to the edge of the card, pulling leftwards natively
-      drawTrackedTextRight(ctx, finalPriceText, cardX + cardW - 34, rowCenterY + scaleConfig.priceSize * 0.34, 1.5)
+
+      const tracking = 1.5
+      const priceAnchorX = cardX + cardW - 34
+      const priceAnchorY = rowCenterY + scaleConfig.priceSize * 0.34
+      
+      // 3. Mathematical Shrink-to-Fit Engine
+      // Max width = distance from divider to the right padding, minus a 16px safety gap
+      const maxPriceW = (cardX + cardW - 34) - dividerX - 16
+      
+      // Measure raw width + tracking
+      const rawWidth = ctx.measureText(finalPriceText).width + (finalPriceText.length * tracking)
+      
+      // If it exceeds the boundary, scale the context proportionately from the right anchor
+      if (rawWidth > maxPriceW) {
+        const shrinkScale = maxPriceW / rawWidth
+        ctx.translate(priceAnchorX, priceAnchorY)
+        ctx.scale(shrinkScale, shrinkScale)
+        ctx.translate(-priceAnchorX, -priceAnchorY)
+      }
+
+      drawTrackedTextRight(ctx, finalPriceText, priceAnchorX, priceAnchorY, tracking)
+      ctx.restore()
     }
 
     // Bottom Row Separator

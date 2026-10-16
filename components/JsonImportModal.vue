@@ -76,6 +76,7 @@
 
           <textarea
             v-model="rawJson"
+            name="rawJsonInput"
             rows="9"
             :placeholder="jsonPlaceholder"
             class="w-full bg-[#030712] border border-slate-800 rounded-xl p-3.5 font-mono text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-[#0068fe] custom-scrollbar"
@@ -85,11 +86,25 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
             <div class="flex items-center gap-4 text-xs sm:text-sm text-slate-300">
               <label class="flex items-center gap-1.5 cursor-pointer">
-                <input type="radio" value="replace" v-model="loadMode" class="accent-[#0068fe]" />
+                <input 
+                  type="radio" 
+                  id="list-replace"
+                  name="listReplace"
+                  value="replace" 
+                  v-model="loadMode" 
+                  class="accent-[#0068fe]" 
+                />
                 <span>Replace current list</span>
               </label>
               <label class="flex items-center gap-1.5 cursor-pointer">
-                <input type="radio" value="append" v-model="loadMode" class="accent-[#0068fe]" />
+                <input 
+                  type="radio" 
+                  id="list-append"
+                  name="listAppend"
+                  value="append" 
+                  v-model="loadMode" 
+                  class="accent-[#0068fe]" 
+                />
                 <span>Append to list</span>
               </label>
             </div>

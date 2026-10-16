@@ -90,11 +90,18 @@
     </div>
 
     <!-- CATEGORY -->
-    <div class="mb-4 sm:mb-5">
-      <label class="block text-xs font-bold text-white uppercase tracking-wider mb-2">Category *</label>
+    <fieldset class="mb-4 sm:mb-5">
+      <legend class="block text-xs font-bold text-white uppercase tracking-wider mb-2">Category *</legend>
       <div class="flex flex-wrap gap-1.5 sm:gap-2">
-        <label v-for="cat in categories" :key="cat" class="cursor-pointer">
-          <input type="radio" :value="cat" v-model="item.category" class="hidden peer" />
+        <label v-for="(cat, catIdx) in categories" :key="cat" :for="'cat-' + index + '-' + catIdx" class="cursor-pointer">
+          <input 
+            :id="'cat-' + index + '-' + catIdx"
+            type="radio" 
+            :value="cat" 
+            v-model="item.category" 
+            class="hidden peer"
+            :name="'categoryName-' + index" 
+          />
           <div 
             class="px-3 py-1.5 sm:px-4 sm:py-2 bg-[#030712] border border-slate-800 rounded-lg text-xs sm:text-sm text-slate-400 transition-colors font-medium"
             :class="[
@@ -108,15 +115,17 @@
           </div>
         </label>
       </div>
-    </div>
+    </fieldset>
 
     <!-- ITEM NAME & PRICE -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4 mb-4">
       <div class="md:col-span-2">
-        <label class="block text-xs font-bold text-white uppercase tracking-wider mb-1">Item Name *</label>
+        <label :for="'itemName-' + index" class="block text-xs font-bold text-white uppercase tracking-wider mb-1">Item Name *</label>
         <div class="relative w-full">
           <input 
+            :id="'itemName-' + index"
             v-model="item.name" 
+            :name="'itemName-' + index"
             type="text" 
             maxlength="40" 
             placeholder="e.g. Ghee Roast Dosa" 
@@ -131,10 +140,12 @@
         </div>
       </div>
       <div>
-        <label class="block text-xs font-bold text-white uppercase tracking-wider mb-1">Price (Optional)</label>
+        <label :for="'itemPrice-' + index" class="block text-xs font-bold text-white uppercase tracking-wider mb-1">Price (Optional)</label>
         <div class="relative w-full">
           <input 
+            :id="'itemPrice-' + index"
             v-model="item.price" 
+            :name="'itemPrice-' + index"
             type="text" 
             maxlength="4"
             placeholder="e.g. 250 or Free" 
@@ -153,9 +164,11 @@
     <!-- DIETARY TYPE & OFFERS / DETAILS -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
       <div>
-        <label class="block text-xs font-bold text-white uppercase tracking-wider mb-1">Dietary Type *</label>
+        <label :for="'isVegSelect-' + index" class="block text-xs font-bold text-white uppercase tracking-wider mb-1">Dietary Type *</label>
         <select 
+          :id="'isVegSelect-' + index"
           v-model="item.isVeg" 
+          :name="'isVegSelect-' + index"
           class="w-full bg-[#030712] border border-slate-800 rounded-lg px-3.5 sm:px-4 py-2.5 text-sm sm:text-base text-white focus:outline-none focus:border-[#0068fe] transition-colors appearance-none"
         >
           <option :value="true">Vegetarian</option>
@@ -163,10 +176,12 @@
         </select>
       </div>
       <div class="md:col-span-2">
-        <label class="block text-xs font-bold text-white uppercase tracking-wider mb-1">Offers / Details (Optional)</label>
+        <label :for="'itemDescription-' + index" class="block text-xs font-bold text-white uppercase tracking-wider mb-1">Offers / Details (Optional)</label>
         <div class="relative w-full">
           <input 
+            :id="'itemDescription-' + index"
             v-model="item.description" 
+            :name="'itemDescription-' + index"
             type="text" 
             maxlength="40" 
             placeholder="Offers / Details..." 
@@ -181,6 +196,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 

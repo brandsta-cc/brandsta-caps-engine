@@ -15,7 +15,6 @@
 
       <!-- Action Buttons (Responsive 320px+ Grid/Flex) -->
       <div class="flex flex-wrap items-center gap-2">
-        
         <!-- Post Live (Primary) -->
         <button
           type="button"
@@ -74,8 +73,64 @@
         >
           Log Out
         </button>
-
       </div>
+    </div>
+
+    <!-- CAPS Campaign Control Block (Only displays if CAPS is present) -->
+    <div v-if="hasCapsCategory" class="mt-4 pt-4 border-t border-slate-800 flex flex-row items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+      
+      <!-- CAPS Custom Title -->
+      <div class="w-1/2 relative">
+        <label for="caps-global-title" class="block text-[10px] font-bold text-amber-500 uppercase tracking-wider mb-1 text-center">
+          Event Title
+        </label>
+        <div class="relative">
+          <input 
+            id="caps-global-title"
+            name="capsGlobalTitle"
+            :value="capsTitle"
+            @input="$emit('update:capsTitle', $event.target.value)"
+            type="text" 
+            maxlength="20"
+            placeholder="SEASONAL SPECIALS" 
+            class="w-full bg-[#030712] border border-slate-700 rounded-lg px-2 sm:px-3.5 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-amber-500 transition-colors uppercase font-mono text-center pr-10" 
+          />
+          <span 
+            class="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-[11px] sm:text-[12px] font-mono select-none transition-colors"
+            :class="(capsTitle?.length || 0) >= 18 ? 'text-red-400' : 'text-slate-500'"
+            aria-hidden="true"
+          >
+            {{ capsTitle?.length || 0 }}/20
+          </span>
+        </div>
+      </div>
+
+      <!-- CAPS Custom Date -->
+      <div class="w-1/2 relative">
+        <label for="caps-global-date" class="block text-[10px] font-bold text-emerald-400 uppercase tracking-wider mb-1 text-center">
+          Campaign Date
+        </label>
+        <div class="relative">
+          <input 
+            id="caps-global-date"
+            name="capsGlobalDate"
+            :value="capsDate"
+            @input="$emit('update:capsDate', $event.target.value)"
+            type="text" 
+            maxlength="30"
+            placeholder="ALL SEASON" 
+            class="w-full bg-[#030712] border border-slate-700 rounded-lg px-2 sm:px-3.5 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors uppercase font-mono text-center pr-10" 
+          />
+          <span 
+            class="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-[11px] sm:text-[12px] font-mono select-none transition-colors"
+            :class="(capsDate?.length || 0) >= 27 ? 'text-red-400' : 'text-slate-500'"
+            aria-hidden="true"
+          >
+            {{ capsDate?.length || 0 }}/30
+          </span>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -84,8 +139,11 @@
 defineProps({
   username: { type: String, default: '' },
   isLoading: { type: Boolean, default: false },
-  itemCount: { type: Number, default: 0 }
+  itemCount: { type: Number, default: 0 },
+  hasCapsCategory: { type: Boolean, default: false },
+  capsTitle: { type: String, default: 'SEASONAL SPECIALS' },
+  capsDate: { type: String, default: 'ALL SEASON' }
 })
 
-defineEmits(['post', 'logout', 'open-preview', 'open-import', 'open-guide'])
+defineEmits(['post', 'logout', 'open-preview', 'open-import', 'open-guide', 'update:capsTitle', 'update:capsDate'])
 </script>

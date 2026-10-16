@@ -7,7 +7,14 @@
       <img :src="currentImage" alt="Media Asset" class="w-16 h-16 object-cover rounded border border-slate-700 bg-[#030712]" />
       <div class="grow overflow-hidden">
         <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">WP Content URL</p>
-        <input type="text" readonly :value="currentImage" class="w-full bg-transparent text-sm text-[#0068fe] outline-none truncate" />
+        <input 
+          type="text" 
+          id="image-upload"
+          name="imageUpload"
+          readonly 
+          :value="currentImage" 
+          class="w-full bg-transparent text-sm text-[#0068fe] outline-none truncate" 
+        />
       </div>
       <button @click="$emit('update:image', null)" class="px-4 py-2 bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-bold rounded-md transition-colors cursor-pointer">
         Remove
@@ -24,7 +31,15 @@
         @drop.prevent="handleDrop"
         @click="fileInputRef.click()"
       >
-        <input type="file" ref="fileInputRef" accept="image/png, image/jpeg, image/webp" class="hidden" @change="handleFileSelect" />
+        <input 
+          type="file" 
+          ref="fileInputRef" 
+          id="file-input"
+          name="fileInput"
+          accept="image/png, image/jpeg, image/webp" 
+          class="hidden" 
+          @change="handleFileSelect" 
+        />
         <p v-if="!selectedFile" class="text-sm text-slate-400">
           Drag image here or <strong class="text-[#0068fe]">browse files</strong>
         </p>
