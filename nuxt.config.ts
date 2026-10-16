@@ -7,18 +7,32 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
 
 
-  // Add the fonts module here
+// Nuxt Fonts Module
   modules: ['@nuxt/fonts'],
 
-  // 2. NOW TYPESCRIPT WILL RECOGNIZE THIS BLOCK:
   fonts: {
     defaults: {
-      styles: ['normal'], 
+      styles: ['normal'],
       subsets: ['latin'],
+      // Stops Nuxt from blocking initial navigation with head preloads
+      preload: false,
+      fallbacks: {
+        'sans-serif': ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        'serif': ['Georgia', 'serif']
+      }
     },
     families: [
-      { name: 'Inter', provider: 'google', weights: [400, 500, 600, 700], global: true },
-      { name: 'Faculty Glyphic', provider: 'google', weights: [400, 600, 700], global: true },
+      { 
+        name: 'Inter', 
+        provider: 'google', 
+        weights: [400, 500, 600, 700] 
+      },
+      { 
+        name: 'Faculty Glyphic', 
+        provider: 'google', 
+        // Google Fonts only distributes 400 for Faculty Glyphic
+        weights: [400] 
+      }
     ]
   },
 
