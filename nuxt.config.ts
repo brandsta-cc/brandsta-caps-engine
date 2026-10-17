@@ -15,7 +15,7 @@ export default defineNuxtConfig({
       styles: ['normal'],
       subsets: ['latin'],
       // Stops Nuxt from blocking initial navigation with head preloads
-      preload: false,
+      preload: true,
       fallbacks: {
         'sans-serif': ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         'serif': ['Georgia', 'serif']

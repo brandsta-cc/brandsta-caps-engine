@@ -2,7 +2,7 @@
 <template>
   <div
     :draggable="isDraggable"
-    class="data-form-card bg-slate-900/60 border p-4 sm:p-6 rounded-xl shadow-lg relative group transition-all"
+    class="data-form-card bg-slate-900/60 border p-2 sm:p-4 rounded-xl shadow-lg relative group transition-all"
     :data-index="index"
     @dragstart="onDragStart"
     @dragover.prevent="onDragOver"

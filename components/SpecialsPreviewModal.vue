@@ -306,8 +306,20 @@ const slides = computed(() => {
     if (!branchItems.length) return
 
     const totalPages = Math.ceil(branchItems.length / MAX_ITEMS_PER_SLIDE)
+    
+    // Mathematical distribution engine
+    const baseItemsPerPage = Math.floor(branchItems.length / totalPages)
+    let remainder = branchItems.length % totalPages
+    let currentIndex = 0
+
     for (let page = 0; page < totalPages; page++) {
-      const chunk = branchItems.slice(page * MAX_ITEMS_PER_SLIDE, (page + 1) * MAX_ITEMS_PER_SLIDE)
+      // Distribute remainder evenly across the first available pages
+      const itemsForThisPage = baseItemsPerPage + (remainder > 0 ? 1 : 0)
+      remainder--
+
+      const chunk = branchItems.slice(currentIndex, currentIndex + itemsForThisPage)
+      currentIndex += itemsForThisPage
+
       const suffix = totalPages > 1 ? `-${page + 1}` : ''
       result.push({
         categoryKey: catConfig.key,
@@ -529,7 +541,7 @@ const renderSlideToCanvas = async (slide) => {
   // 2. Official Hotel CAPS Logo (~15% larger: 142px wide)
   const logoImg = await loadImage('/images/caps-solid-logo.png')
   if (logoImg) {
-    const logoW = 142
+    const logoW = 146
     const logoH = Math.round(logoW * (267 / 300))
     ctx.drawImage(logoImg, (900 - logoW) / 2, 46, logoW, logoH)
   }
@@ -540,17 +552,17 @@ const renderSlideToCanvas = async (slide) => {
   ctx.fillStyle = cfg.topLogoDarkText ? '#1e293b' : '#ffffff'
 
   ctx.font = '600 36px "Faculty Glyphic", serif'
-  drawTrackedTextCenter(ctx, 'HOTEL', 450, 214, 9)
+  drawTrackedTextCenter(ctx, 'HOTEL', 450, 224, 9)
 
   ctx.font = '700 72px "Faculty Glyphic", serif'
-  drawTrackedTextCenter(ctx, 'CAPS', 450, 282, 6)
+  drawTrackedTextCenter(ctx, 'CAPS', 450, 300, 6)
 
   // 4. Outlet Subtitle (Inter, NO 1/2 page indicator)
-  drawOrnamentalLine(ctx, 450, 312, 360, cfg.accentColor)
+  drawOrnamentalLine(ctx, 450, 328, 360, cfg.accentColor)
   ctx.fillStyle = cfg.subtitleColor
   ctx.font = '600 25px "Inter", sans-serif'
-  drawTrackedTextCenter(ctx, cfg.subtitle, 450, 349, 6)
-  drawOrnamentalLine(ctx, 450, 370, 360, cfg.accentColor)
+  drawTrackedTextCenter(ctx, cfg.subtitle, 450, 365, 6)
+  drawOrnamentalLine(ctx, 450, 386, 360, cfg.accentColor)
 
   // 5. Dynamic Header (Uses Campaign Title for CAPS, defaults to TODAY'S SPECIALS)
   // Check the SPECIFIC slide being drawn, not the global active slide
@@ -562,14 +574,14 @@ const renderSlideToCanvas = async (slide) => {
     : "TODAY’S SPECIALS"
 
   ctx.save()
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.35)'
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.24)'
   ctx.shadowBlur = 12
   ctx.fillStyle = cfg.headingColor
   ctx.font = isCapsSlide ? '700 66px "Faculty Glyphic", serif' : '700 72px "Faculty Glyphic", serif'
-  drawTrackedTextCenter(ctx, headerText, 450, 450, 0.35)
+  drawTrackedTextCenter(ctx, headerText, 450, 470, 0.35)
   ctx.restore()
 
-  drawOrnamentalLine(ctx, 450, 480, 450, cfg.accentColor)
+  drawOrnamentalLine(ctx, 450, 500, 450, cfg.accentColor)
 
   // 6. Dynamic Date (Uses Campaign Date for CAPS, defaults to daily override/formatted date)
   const dateText = isCapsSlide && props.capsDate
@@ -578,7 +590,7 @@ const renderSlideToCanvas = async (slide) => {
 
   ctx.fillStyle = cfg.dateColor
   ctx.font = '500 24px "Inter", sans-serif'
-  drawTrackedTextCenter(ctx, dateText, 450, 524, 4)
+  drawTrackedTextCenter(ctx, dateText, 450, 540, 4)
 
   // 7. Menu Items Stage (Cases 1 to 6 — Bumped ~8-10% on Title & ~15% on Offer/Description)
   const items = slide.items
@@ -706,12 +718,12 @@ const renderSlideToCanvas = async (slide) => {
   })
 
   // 8. FOOTER ROW 1 (Scaled up ~15% | Y = 1496)
-  const row1Y = 1496
+  const row1Y = 1472
   const iconSize = 28 // Increased from 24
   ctx.save()
   ctx.textBaseline = 'middle'
   ctx.fillStyle = '#ffffff'
-  ctx.font = '500 25px "Inter", sans-serif' // Increased from 22
+  ctx.font = '500 28px "Inter", sans-serif' // Increased from 22
 
   // Left: [Globe] capsfamily.in
   drawGlobeIcon(ctx, 48, row1Y - iconSize / 2, iconSize, '#ffffff')
@@ -719,9 +731,9 @@ const renderSlideToCanvas = async (slide) => {
   ctx.fillText('capsfamily.in', 48 + iconSize + 12, row1Y)
 
   // Center: [Phone] +91 92075 17064
-  drawPhoneIcon(ctx, 312, row1Y - iconSize / 2, iconSize, '#ffffff')
+  drawPhoneIcon(ctx, 280, row1Y - iconSize / 2, iconSize, '#ffffff')
   ctx.textAlign = 'left'
-  ctx.fillText('+91 92075 17064', 312 + iconSize + 10, row1Y)
+  ctx.fillText('+91 92075 17064', 280 + iconSize + 6, row1Y)
 
   // Right: [FB] hotelcapsfamily [Insta]
   const rightEdge = 852
@@ -729,7 +741,7 @@ const renderSlideToCanvas = async (slide) => {
   drawInstaIcon(ctx, instaX, row1Y - iconSize / 2, iconSize, '#ffffff')
 
   const handleText = 'hotelcapsfamily'
-  ctx.font = '500 23px "Inter", sans-serif' // Increased from 20
+  ctx.font = '500 28px "Inter", sans-serif' // Increased from 20
   const handleWidth = ctx.measureText(handleText).width
   const handleRightX = instaX - 12
   ctx.textAlign = 'right'
@@ -742,18 +754,18 @@ const renderSlideToCanvas = async (slide) => {
 
   // 9. FOOTER ROW 2
   // We use an explicit baseline Y coordinate so the text and the flat bottom of the logo align perfectly.
-  const row2BaselineY = 1568 
+  const row2BaselineY = 1550 
   ctx.save()
   ctx.textBaseline = 'alphabetic'
 
   // Left: STAY · DINE · CELEBRATE
-  ctx.fillStyle = '#ffbb00'
-  ctx.font = '600 23px "Inter", sans-serif'
+  ctx.fillStyle = '#ffcc00'
+  ctx.font = '700 26px "Inter", sans-serif'
   drawTrackedTextLeft(ctx, 'STAY · DINE · CELEBRATE', 48, row2BaselineY, 3.2)
 
   // Right: POWERED BY [Logo] BRANDSTA
   ctx.fillStyle = '#ffffff'
-  ctx.font = '700 21px "Inter", sans-serif'
+  ctx.font = '700 24px "Inter", sans-serif'
   const brandstaW = drawTrackedTextRight(ctx, 'BRANDSTA', 852, row2BaselineY, 2.5)
 
   const brandstaLogo = await loadImage('/images/brandsta-logo.png')
@@ -768,8 +780,8 @@ const renderSlideToCanvas = async (slide) => {
     logoOffset -= 12
   }
 
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.84)'
-  ctx.font = '500 16px "Inter", sans-serif'
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.89)'
+  ctx.font = '500 20px "Inter", sans-serif'
   drawTrackedTextRight(ctx, 'POWERED BY', logoOffset, row2BaselineY, 1.8)
   ctx.restore()
   

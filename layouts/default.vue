@@ -3,7 +3,7 @@
   <div class="min-h-screen bg-[#030712] text-slate-200 font-sans selection:bg-[#0068fe] selection:text-white flex flex-col">
     
     <!-- Header -->
-    <header class="relative bg-[#030712] border-b border-slate-800/80 px-6 py-4 z-50 shadow-2xl overflow-hidden">
+    <header class="sticky top-0 bg-[#030712] border-b border-slate-800/80 px-6 py-4 z-50 shadow-2xl overflow-hidden">
       
       <!-- Subtle top border connecting the brand colors -->
       <div class="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-amber-500 via-slate-800 to-[#0068fe] opacity-80"></div>
