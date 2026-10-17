@@ -141,7 +141,7 @@
               @input="$emit('update:capsDate', $event.target.value)"
               type="text" 
               maxlength="30"
-              placeholder="ALL SEASON" 
+              placeholder="Limited Time Favourites" 
               class="w-full bg-[#030712] border border-slate-700 rounded-lg px-2 sm:px-3.5 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors uppercase font-mono text-center pr-10" 
             />
             <span 
@@ -166,7 +166,7 @@ defineProps({
   itemCount: { type: Number, default: 0 },
   hasCapsCategory: { type: Boolean, default: false },
   capsTitle: { type: String, default: 'SEASONAL SPECIALS' },
-  capsDate: { type: String, default: 'ALL SEASON' }
+  capsDate: { type: String, default: 'LIMITED TIME FAVOURITES' }
 })
 
 // Added 'add-new' to the emits array

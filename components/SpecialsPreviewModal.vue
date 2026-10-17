@@ -188,7 +188,7 @@ const props = defineProps({
   isOpen: { type: Boolean, default: false },
   specials: { type: Array, required: true },
   capsTitle: { type: String, default: 'SEASONAL SPECIALS' },
-  capsDate: { type: String, default: 'ALL SEASON' }
+  capsDate: { type: String, default: 'LIMITED TIME FAVOURITES' }
 })
 
 const emit = defineEmits(['close', 'update:capsTitle', 'update:capsDate'])
@@ -230,7 +230,7 @@ const CATEGORY_CONFIG = [
     slug: 'Restaurant',
     bgSrc: '/images/bg-restaurant.png',
     fallbackGradient: ['#072a16', '#03140a'],
-    cardBg: 'rgba(4, 24, 12, 0.58)',
+    cardBg: 'rgba(4, 24, 12, 0.73)',
     cardBorder: 'rgba(212, 175, 55, 0.34)',
     headingColor: '#f6e7c1',
     subtitleColor: '#f8fafc',
@@ -597,11 +597,11 @@ const renderSlideToCanvas = async (slide) => {
   const count = items.length
 
   const scaleConfig = {
-    1: { rowH: 175, nameSize: 48, descSize: 24, priceSize: 46, iconSize: 38, padY: 52 },
-    2: { rowH: 162, nameSize: 44, descSize: 23, priceSize: 43, iconSize: 36, padY: 46 },
-    3: { rowH: 148, nameSize: 42, descSize: 22, priceSize: 41, iconSize: 34, padY: 40 },
-    4: { rowH: 136, nameSize: 40, descSize: 21, priceSize: 39, iconSize: 32, padY: 34 },
-    5: { rowH: 128, nameSize: 38, descSize: 20, priceSize: 38, iconSize: 31, padY: 28 },
+    1: { rowH: 175, nameSize: 48, descSize: 24, priceSize: 46, iconSize: 38, padY: 47 },
+    2: { rowH: 162, nameSize: 44, descSize: 23, priceSize: 43, iconSize: 36, padY: 40 },
+    3: { rowH: 148, nameSize: 42, descSize: 22, priceSize: 41, iconSize: 34, padY: 34 },
+    4: { rowH: 136, nameSize: 40, descSize: 21, priceSize: 39, iconSize: 32, padY: 30 },
+    5: { rowH: 128, nameSize: 38, descSize: 20, priceSize: 38, iconSize: 31, padY: 26 },
     6: { rowH: 122, nameSize: 36, descSize: 19.5, priceSize: 36, iconSize: 30, padY: 24 }
   }[Math.min(6, Math.max(1, count))]
 
@@ -718,12 +718,12 @@ const renderSlideToCanvas = async (slide) => {
   })
 
   // 8. FOOTER ROW 1 (Scaled up ~15% | Y = 1496)
-  const row1Y = 1472
+  const row1Y = 1476
   const iconSize = 28 // Increased from 24
   ctx.save()
   ctx.textBaseline = 'middle'
   ctx.fillStyle = '#ffffff'
-  ctx.font = '500 28px "Inter", sans-serif' // Increased from 22
+  ctx.font = '500 26px "Inter", sans-serif' // Increased from 22
 
   // Left: [Globe] capsfamily.in
   drawGlobeIcon(ctx, 48, row1Y - iconSize / 2, iconSize, '#ffffff')
@@ -731,9 +731,9 @@ const renderSlideToCanvas = async (slide) => {
   ctx.fillText('capsfamily.in', 48 + iconSize + 12, row1Y)
 
   // Center: [Phone] +91 92075 17064
-  drawPhoneIcon(ctx, 280, row1Y - iconSize / 2, iconSize, '#ffffff')
+  drawPhoneIcon(ctx, 294, row1Y - iconSize / 2, iconSize, '#ffffff')
   ctx.textAlign = 'left'
-  ctx.fillText('+91 92075 17064', 280 + iconSize + 6, row1Y)
+  ctx.fillText('+91 92075 17064', 294 + iconSize + 6, row1Y)
 
   // Right: [FB] hotelcapsfamily [Insta]
   const rightEdge = 852
@@ -741,7 +741,7 @@ const renderSlideToCanvas = async (slide) => {
   drawInstaIcon(ctx, instaX, row1Y - iconSize / 2, iconSize, '#ffffff')
 
   const handleText = 'hotelcapsfamily'
-  ctx.font = '500 28px "Inter", sans-serif' // Increased from 20
+  ctx.font = '500 26px "Inter", sans-serif' // Increased from 20
   const handleWidth = ctx.measureText(handleText).width
   const handleRightX = instaX - 12
   ctx.textAlign = 'right'

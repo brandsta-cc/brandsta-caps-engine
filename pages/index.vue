@@ -135,7 +135,7 @@ import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 
 // Add these variables to store your global campaign logic
 const capsTitle = ref('SEASONAL SPECIALS')
-const capsDate = ref('ALL SEASON')
+const capsDate = ref('LIMITED TIME FAVOURITES')
 
 // This instantly detects if ANY item in the array is a CAPS item
 const hasCapsCategory = computed(() => {
