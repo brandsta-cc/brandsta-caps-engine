@@ -106,7 +106,7 @@
             class="px-3 py-1.5 sm:px-4 sm:py-2 bg-[#030712] border border-slate-800 rounded-lg text-xs sm:text-sm text-slate-400 transition-colors font-medium"
             :class="[
               cat.toLowerCase() === 'caps' ? 'peer-checked:bg-amber-500/10 peer-checked:border-amber-500 peer-checked:text-amber-400' : '',
-              cat.toLowerCase() === 'multi cuisine restaurant' ? 'peer-checked:bg-emerald-500/10 peer-checked:border-emerald-600 peer-checked:text-emerald-500' : '',
+              cat.toLowerCase() === 'multi-cuisine restaurant' ? 'peer-checked:bg-emerald-500/10 peer-checked:border-emerald-600 peer-checked:text-emerald-500' : '',
               cat.toLowerCase() === 'chill n chai' ? 'peer-checked:bg-[#d4a373]/10 peer-checked:border-[#d4a373] peer-checked:text-[#d4a373]' : '',
               cat.toLowerCase() === 'arabic corner' ? 'peer-checked:bg-[#8b5a2b]/10 peer-checked:border-[#ab7a4b] peer-checked:text-[#ab7a4b]' : ''
             ]"
@@ -212,7 +212,7 @@ const props = defineProps({
 
 const emit = defineEmits(['remove', 'move-up', 'move-down', 'drag-reorder'])
 
-const categories = ['CAPS', 'Multi Cuisine Restaurant', 'Chill N Chai', 'Arabic Corner']
+const categories = ['CAPS', 'Multi-Cuisine Restaurant', 'Chill N Chai', 'Arabic Corner']
 
 // Desktop HTML5 Drag State
 const isDraggable = ref(false)

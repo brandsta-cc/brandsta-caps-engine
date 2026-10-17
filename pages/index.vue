@@ -239,7 +239,7 @@ const logout = () => {
 const addNewSpecial = () => {
   specials.value.push({
     id: Date.now() + Math.random(),
-    category: 'Multi Cuisine Restaurant',
+    category: 'Multi-Cuisine Restaurant',
     name: '',
     price: null,
     isVeg: true,

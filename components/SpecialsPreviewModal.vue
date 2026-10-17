@@ -225,7 +225,7 @@ const CATEGORY_CONFIG = [
     accentColor: '#e6b86a'
   },
   {
-    key: 'Multi Cuisine Restaurant',
+    key: 'Multi-Cuisine Restaurant',
     subtitle: 'MULTI-CUISINE RESTAURANT',
     slug: 'Restaurant',
     bgSrc: '/images/bg-restaurant.png',

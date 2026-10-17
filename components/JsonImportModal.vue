@@ -151,7 +151,7 @@
               2. Strict Schema Rules
             </h3>
             <ul class="space-y-1.5 text-slate-300 text-xs leading-relaxed">
-              <li><strong class="text-white">category</strong> (Required): Must be one of <code class="text-amber-300">"CAPS"</code>, <code class="text-emerald-400">"Multi Cuisine Restaurant"</code>, <code class="text-amber-200">"Chill N Chai"</code>, or <code class="text-orange-300">"Arabic Corner"</code>.</li>
+              <li><strong class="text-white">category</strong> (Required): Must be one of <code class="text-amber-300">"CAPS"</code>, <code class="text-emerald-400">"Multi-Cuisine Restaurant"</code>, <code class="text-amber-200">"Chill N Chai"</code>, or <code class="text-orange-300">"Arabic Corner"</code>.</li>
               <li><strong class="text-white">name</strong> (Required): Dish name, maximum <code class="text-slate-200">40 characters</code>.</li>
               <li><strong class="text-white">price</strong> (Optional): Number or short text, max <code class="text-slate-200">4 characters</code> (e.g. <code class="text-slate-200">"240"</code>, <code class="text-slate-200">"Free"</code>) or <code class="text-slate-200">null</code>.</li>
               <li><strong class="text-white">isVeg</strong> (Required): <code class="text-emerald-400">true</code> for Vegetarian, <code class="text-red-400">false</code> for Non-Vegetarian.</li>
@@ -187,7 +187,7 @@ watch(() => props.initialTab, (val) => {
 
 const jsonPlaceholder = `[
   {
-    "category": "Multi Cuisine Restaurant",
+    "category": "Multi-Cuisine Restaurant",
     "name": "Malabar Chicken Steak",
     "price": "340",
     "isVeg": false,
@@ -197,8 +197,8 @@ const jsonPlaceholder = `[
 
 const VALID_CATEGORIES = {
   'caps': 'CAPS',
-  'multi cuisine restaurant': 'Multi Cuisine Restaurant',
-  'multi-cuisine restaurant': 'Multi Cuisine Restaurant',
+  'multi-cuisine restaurant': 'Multi-Cuisine Restaurant',
+  'multi-cuisine restaurant': 'Multi-Cuisine Restaurant',
   'chill n chai': 'Chill N Chai',
   "chill n' chai": 'Chill N Chai',
   'arabic corner': 'Arabic Corner'
@@ -207,7 +207,7 @@ const VALID_CATEGORIES = {
 const aiPromptTemplate = `Convert the following Hotel CAPS daily specials into a raw JSON array (no markdown explanation, only valid JSON).
 
 Follow these exact rules for each object:
-- "category": Must be strictly one of: "CAPS", "Multi Cuisine Restaurant", "Chill N Chai", or "Arabic Corner"
+- "category": Must be strictly one of: "CAPS", "Multi-Cuisine Restaurant", "Chill N Chai", or "Arabic Corner"
 - "name": Dish name (string, max 40 characters, required)
 - "price": Price as a number or short text (string, max 4 characters, e.g. "260" or "Free") or null if no price
 - "isVeg": true for Vegetarian, false for Non-Vegetarian (boolean, required)
@@ -216,7 +216,7 @@ Follow these exact rules for each object:
 Example Output:
 [
   {
-    "category": "Multi Cuisine Restaurant",
+    "category": "Multi-Cuisine Restaurant",
     "name": "Paneer Shawarma Tacos",
     "price": "260",
     "isVeg": true,
@@ -289,7 +289,7 @@ const validateAndLoad = () => {
     const rawCat = String(entry.category || '').trim().toLowerCase()
     const normalizedCategory = VALID_CATEGORIES[rawCat]
     if (!normalizedCategory) {
-      errors.push(`${label}: Invalid category "${entry.category}". Allowed: CAPS, Multi Cuisine Restaurant, Chill N Chai, Arabic Corner.`)
+      errors.push(`${label}: Invalid category "${entry.category}". Allowed: CAPS, Multi-Cuisine Restaurant, Chill N Chai, Arabic Corner.`)
     }
 
     // 2. Validate Name
@@ -324,7 +324,7 @@ const validateAndLoad = () => {
 
     sanitized.push({
       id: Date.now() + idx + Math.random(),
-      category: normalizedCategory || 'Multi Cuisine Restaurant',
+      category: normalizedCategory || 'Multi-Cuisine Restaurant',
       name,
       price,
       isVeg: Boolean(entry.isVeg),
