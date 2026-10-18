@@ -18,7 +18,7 @@ export default defineNuxtConfig({
       preload: true,
       fallbacks: {
         'sans-serif': ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-        'serif': ['Georgia', 'serif']
+        'serif': ['serif', 'Georgia']
       }
     },
     families: [

@@ -16,6 +16,8 @@
           <div class="absolute top-1/2 left-6 -translate-y-1/2 w-20 h-20 bg-amber-500/15 blur-2xl rounded-full pointer-events-none"></div>
           <img 
             src="/images/caps-solid-logo.png" 
+            width="180"
+            height="160"
             alt="Hotel CAPS"
             fetchpriority="high" 
             class="h-14 w-auto relative z-10 drop-shadow-[0_2px_10px_rgba(245,158,11,0.2)]" 
@@ -38,6 +40,8 @@
           <div class="absolute top-1/2 right-6 -translate-y-1/2 w-20 h-20 bg-[#0068fe]/20 blur-2xl rounded-full pointer-events-none"></div>
           <img 
             src="/images/brandsta-logo.png" 
+            width="180"
+            height="186"
             alt="Brandsta" 
             fetchpriority="high"
             class="h-14 w-auto relative z-10 drop-shadow-[0_2px_10px_rgba(0,104,254,0.3)]" 
