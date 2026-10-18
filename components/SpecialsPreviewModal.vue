@@ -179,6 +179,16 @@
       </div>
     </div>
   </Teleport>
+
+  <!-- INVISIBLE FONT PRE-WARMER -->
+  <div 
+    aria-hidden="true" 
+    class="fixed -top-[9999px] left-0 pointer-events-none opacity-0 select-none text-[1px] -z-50"
+  >
+    <span style="font-family: 'Faculty Glyphic', serif; font-weight: 400;">HOTEL CAPS 400</span>
+    <span style="font-family: 'Faculty Glyphic', serif; font-weight: 600;">HOTEL CAPS 600</span>
+    <span style="font-family: 'Faculty Glyphic', serif; font-weight: 700;">HOTEL CAPS 700</span>
+  </div>
 </template>
 
 <script setup>
@@ -574,8 +584,18 @@ const renderSlideToCanvas = async (slide) => {
     : "TODAY’S SPECIALS"
 
   ctx.save()
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.24)'
-  ctx.shadowBlur = 12
+  // CONDITIONAL SHADOW ENGINE
+  if (isCapsSlide) {
+    // Light Background (CAPS) - Subtle crisp shadow
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.12)'
+    ctx.shadowBlur = 4
+    ctx.shadowOffsetY = 1
+  } else {
+    // Dark Backgrounds (Outlets) - Deep contrast shadow
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.45)'
+    ctx.shadowBlur = 12
+    ctx.shadowOffsetY = 2
+  }
   ctx.fillStyle = cfg.headingColor
   ctx.font = isCapsSlide ? '700 66px "Faculty Glyphic", serif' : '700 72px "Faculty Glyphic", serif'
   drawTrackedTextCenter(ctx, headerText, 450, 470, 0.35)
@@ -798,8 +818,15 @@ const renderAllSlides = async () => {
   try {
     // FORCE CANVAS FONT RESOLUTION
     if (typeof document !== 'undefined' && document.fonts) {
-      await document.fonts.load('600 16px "Faculty Glyphic"')
-      await document.fonts.load('500 16px "Inter"')
+      await Promise.all([
+        document.fonts.load('400 16px "Faculty Glyphic"'),
+        document.fonts.load('500 16px "Faculty Glyphic"'),
+        document.fonts.load('600 16px "Faculty Glyphic"'),
+        document.fonts.load('700 16px "Faculty Glyphic"'),
+        document.fonts.load('500 16px "Inter"'),
+        document.fonts.load('600 16px "Inter"'),
+        document.fonts.load('700 16px "Inter"')
+      ])
       await document.fonts.ready
     }
     
