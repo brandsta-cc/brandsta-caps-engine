@@ -10,10 +10,10 @@
       <div class="w-full max-w-4xl mx-auto bg-slate-900/95 border border-slate-800 rounded-2xl px-3.5 py-2.5 flex flex-wrap items-center justify-between gap-2 z-20">
         
         <div class="flex items-center gap-2">
-          <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30">
+          <span class="text-xs font-['Faculty_Glyphic'] font-medium px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30">
             {{ slides.length ? `${activeIndex + 1} / ${slides.length}` : '0 / 0' }}
           </span>
-          <span v-if="currentSlide" class="text-xs sm:text-sm font-bold text-white truncate max-w-[160px] sm:max-w-none">
+          <span v-if="currentSlide" class="text-xs sm:text-sm font-['Faculty_Glyphic'] font-bold tracking-wider text-white truncate max-w-[160px] sm:max-w-none">
             {{ currentSlide.categoryLabel }}
             <span v-if="currentSlide.totalPages > 1" class="text-slate-400 font-normal">
               (Part {{ currentSlide.pageNumber }}/{{ currentSlide.totalPages }})
@@ -136,7 +136,7 @@
             type="button"
             :disabled="isRendering || isDownloading"
             @click.prevent="downloadAllPosters"
-            class="flex-1 bg-[#0068fe] hover:bg-blue-600 disabled:opacity-50 text-white font-bold text-xs sm:text-sm py-2.5 px-3 rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-md"
+            class="flex-1 bg-[#0068fe] hover:bg-blue-600 disabled:opacity-50 text-white font-['Faculty_Glyphic'] font-normal text-xs sm:text-sm py-2.5 px-3 rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-md"
           >
             <svg class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
@@ -149,7 +149,7 @@
             type="button"
             :disabled="isRendering || isDownloading"
             @click.prevent="downloadCurrentPoster"
-            class="flex-1 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-white border border-slate-700 font-bold text-xs sm:text-sm py-2.5 px-3 rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-2"
+            class="flex-1 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-white border border-slate-700 font-['Faculty_Glyphic'] font-bold text-xs sm:text-sm py-2.5 px-3 rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-2"
           >
             <svg class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -179,16 +179,6 @@
       </div>
     </div>
   </Teleport>
-
-  <!-- INVISIBLE FONT PRE-WARMER -->
-  <div 
-    aria-hidden="true" 
-    class="fixed -top-[9999px] left-0 pointer-events-none opacity-0 select-none text-[1px] -z-50"
-  >
-    <span style="font-family: 'Faculty Glyphic', serif; font-weight: 400;">HOTEL CAPS 400</span>
-    <span style="font-family: 'Faculty Glyphic', serif; font-weight: 600;">HOTEL CAPS 600</span>
-    <span style="font-family: 'Faculty Glyphic', serif; font-weight: 700;">HOTEL CAPS 700</span>
-  </div>
 </template>
 
 <script setup>

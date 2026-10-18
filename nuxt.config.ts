@@ -25,13 +25,15 @@ export default defineNuxtConfig({
       { 
         name: 'Inter', 
         provider: 'google', 
-        weights: [400, 500, 600, 700] 
+        weights: [400, 500, 600, 700],
+        global: true
       },
       { 
         name: 'Faculty Glyphic', 
         provider: 'google', 
         // Google Fonts only distributes 400 for Faculty Glyphic
-        weights: [400] 
+        weights: [400, 500, 600, 700],
+        global: true
       }
     ]
   },
