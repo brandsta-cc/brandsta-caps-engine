@@ -691,7 +691,7 @@ const createSampleState = () => ({
   refNo: `CAPS/QTN/${new Date().getFullYear()}/001`,
   quoteDate: formatTodayDate(),
   clientName: 'GUEST NAME',
-  clientPhone: '9876543210',
+  clientPhone: '9400653709',
   guaranteedPax: 'PAX : 100',
   dateTime: '01/01/2027 • 11:00 AM TO 02:00 PM',
   venueProgram: 'CAPS BANQUET HALL - BIRTHDAY FUNCTION',
