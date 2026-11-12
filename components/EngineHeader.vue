@@ -7,22 +7,73 @@
       <div class="flex flex-wrap items-center gap-1.5 sm:gap-3">
         
         <!-- 1. Title (Mobile: Row 1 Left | Desktop: Left Side) -->
-        <h2 class="order-1 lg:order-1 mr-auto lg:mr-0 text-base sm:text-lg font-bold text-white tracking-wide whitespace-nowrap">
+        <h2 class="order-1 lg:order-1 mr-auto lg:mr-0 text-sm sm:text-lg font-bold text-white tracking-wide whitespace-nowrap">
           Hotel CAPS Specials
         </h2>
   
-        <!-- 2. Post Live (Mobile: Row 1 Right | Desktop: Left Side anchored) -->
-        <!-- lg:mr-auto on Desktop pushes everything else to the far right -->
+        <!-- 2A. Post Live (Mobile: Row 1 Right | Desktop: Left Cluster) -->
         <button
           type="button"
           :disabled="isLoading"
           @click="$emit('post')"
-          class="order-2 lg:order-2 lg:mr-auto flex-none min-w-[100px] bg-[#0068fe] hover:bg-blue-600 disabled:opacity-60 text-white font-bold text-xs sm:text-sm py-2 sm:py-2.5 px-3 sm:px-4 rounded-xl transition-all shadow-md cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2"
+          class="order-2 lg:order-2 flex-none min-w-23 sm:min-w-25 bg-[#0068fe] hover:bg-blue-600 active:scale-[0.98] disabled:opacity-60 text-white font-bold text-xs sm:text-sm py-2 sm:py-2.5 px-3 sm:px-4 rounded-xl transition-all shadow-md cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2"
         >
           <span v-if="isLoading" class="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
           <span>{{ isLoading ? 'Posting...' : 'Post Live' }}</span>
         </button>
-  
+
+        <!-- 2B. Last Updated Calendar Icon + Popover (lg:mr-auto pushes right cluster on Desktop) -->
+        <div 
+          ref="syncPopoverRef" 
+          class="order-2 lg:order-2 lg:mr-auto relative flex items-center"
+          @mouseenter="onHoverSync(true)"
+          @mouseleave="onHoverSync(false)"
+        >
+          <button
+            type="button"
+            @click.stop="toggleSyncPopover"
+            aria-label="View Last Live Sync Time"
+            :aria-expanded="showSyncInfo"
+            class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#030712] hover:bg-slate-800 active:scale-95 text-slate-300 hover:text-white border border-slate-700/80 hover:border-emerald-500/50 flex items-center justify-center transition-all cursor-pointer relative"
+          >
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span 
+              v-if="lastUpdated" 
+              class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#030712]"
+            ></span>
+          </button>
+
+          <!-- Floating Timestamp Popover -->
+          <Transition
+            enter-active-class="transition duration-150 ease-out"
+            enter-from-class="opacity-0 translate-y-1 scale-95"
+            enter-to-class="opacity-100 translate-y-0 scale-100"
+            leave-active-class="transition duration-100 ease-in"
+            leave-from-class="opacity-100 translate-y-0 scale-100"
+            leave-to-class="opacity-0 translate-y-1 scale-95"
+          >
+            <div 
+              v-if="showSyncInfo"
+              class="absolute right-0 lg:left-0 lg:right-auto top-full mt-2 w-60 rounded-xl bg-slate-950/95 border border-slate-700/90 p-3 shadow-2xl backdrop-blur-md z-50 text-left"
+            >
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  Last Posted Live
+                </span>
+                <span v-if="relativeSyncText" class="text-[10px] font-semibold text-slate-400">
+                  {{ relativeSyncText }}
+                </span>
+              </div>
+              <p class="text-xs font-semibold text-white">
+                {{ formattedSyncDate }}
+              </p>
+            </div>
+          </Transition>
+        </div>
+
         <!-- FORCE ROW BREAK 1 (Mobile Only) -->
         <div class="order-3 w-full h-0 lg:hidden"></div>
   
@@ -160,15 +211,67 @@
 </template>
 
 <script setup>
-defineProps({
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+
+const props = defineProps({
   username: { type: String, default: '' },
   isLoading: { type: Boolean, default: false },
   itemCount: { type: Number, default: 0 },
   hasCapsCategory: { type: Boolean, default: false },
   capsTitle: { type: String, default: 'SEASONAL SPECIALS' },
-  capsDate: { type: String, default: 'LIMITED TIME FAVOURITES' }
+  capsDate: { type: String, default: 'LIMITED TIME FAVOURITES' },
+  lastUpdated: { type: [String, Number, Date], default: null }
 })
 
-// Added 'add-new' to the emits array
 defineEmits(['post', 'logout', 'open-preview', 'open-import', 'open-guide', 'update:capsTitle', 'update:capsDate', 'add-new'])
+
+const showSyncInfo = ref(false)
+const syncPopoverRef = ref(null)
+const nowTick = ref(Date.now())
+
+const toggleSyncPopover = () => {
+  nowTick.value = Date.now()
+  showSyncInfo.value = !showSyncInfo.value
+}
+
+const onHoverSync = (state) => {
+  if (typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    if (state) nowTick.value = Date.now()
+    showSyncInfo.value = state
+  }
+}
+
+const formattedSyncDate = computed(() => {
+  if (!props.lastUpdated) return 'No sync recorded yet'
+  const d = new Date(props.lastUpdated)
+  if (Number.isNaN(d.getTime())) return 'No sync recorded yet'
+  return new Intl.DateTimeFormat('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  }).format(d)
+})
+
+const relativeSyncText = computed(() => {
+  if (!props.lastUpdated) return ''
+  const d = new Date(props.lastUpdated)
+  if (Number.isNaN(d.getTime())) return ''
+  const diffSec = Math.max(0, Math.floor((nowTick.value - d.getTime()) / 1000))
+  if (diffSec < 60) return 'Just now'
+  if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m ago`
+  if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h ago`
+  return `${Math.floor(diffSec / 86400)}d ago`
+})
+
+const handleOutsideClick = (e) => {
+  if (showSyncInfo.value && syncPopoverRef.value && !syncPopoverRef.value.contains(e.target)) {
+    showSyncInfo.value = false
+  }
+}
+
+onMounted(() => document.addEventListener('click', handleOutsideClick))
+onBeforeUnmount(() => document.removeEventListener('click', handleOutsideClick))
 </script>
