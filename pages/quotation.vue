@@ -184,36 +184,38 @@
             <div>
               <div class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
                 <label for="q-ref-no">Quotation Ref No.</label>
-                <span>{{ form.refNo.length }}/{{ LIMITS.refNo }}</span>
+                <span :class="getCounterClass(form.refNo, LIMITS.refNo)">{{ form.refNo.length }}/{{ LIMITS.refNo }}</span>
               </div>
               <input
                 id="q-ref-no"
                 name="refNo"
                 type="text"
                 autocomplete="off"
-                :maxlength="LIMITS.refNo"
+                :maxlength="Math.max(LIMITS.refNo, form.refNo.length)"
                 :value="form.refNo"
                 @input="onUpperInput('refNo', $event)"
                 placeholder="CAPS/QTN/2026/..."
-                class="w-full bg-[#030712] border border-slate-800 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
+                :class="form.refNo.length > LIMITS.refNo ? 'border-red-500/80 focus:border-red-400' : 'border-slate-800 focus:border-amber-500'"
+                class="w-full bg-[#030712] border rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
               />
             </div>
 
             <div>
               <div class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
                 <label for="q-quote-date">Quotation Issue Date</label>
-                <span>{{ form.quoteDate.length }}/{{ LIMITS.quoteDate }}</span>
+                <span :class="getCounterClass(form.quoteDate, LIMITS.quoteDate)">{{ form.quoteDate.length }}/{{ LIMITS.quoteDate }}</span>
               </div>
               <input
                 id="q-quote-date"
                 name="quoteDate"
                 type="text"
                 autocomplete="off"
-                :maxlength="LIMITS.quoteDate"
+                :maxlength="Math.max(LIMITS.quoteDate, form.quoteDate.length)"
                 :value="form.quoteDate"
                 @input="onUpperInput('quoteDate', $event)"
                 placeholder="DD/MM/YYYY"
-                class="w-full bg-[#030712] border border-slate-800 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
+                :class="form.quoteDate.length > LIMITS.quoteDate ? 'border-red-500/80 focus:border-red-400' : 'border-slate-800 focus:border-amber-500'"
+                class="w-full bg-[#030712] border rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
               />
             </div>
           </div>
@@ -223,54 +225,57 @@
             <div class="sm:col-span-6">
               <div class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
                 <label for="q-client-name">Order To / Client</label>
-                <span>{{ form.clientName.length }}/{{ LIMITS.clientName }}</span>
+                <span :class="getCounterClass(form.clientName, LIMITS.clientName)">{{ form.clientName.length }}/{{ LIMITS.clientName }}</span>
               </div>
               <input
                 id="q-client-name"
                 name="clientName"
                 type="text"
                 autocomplete="off"
-                :maxlength="LIMITS.clientName"
+                :maxlength="Math.max(LIMITS.clientName, form.clientName.length)"
                 :value="form.clientName"
                 @input="onUpperInput('clientName', $event)"
                 placeholder="Enter Name & Details"
-                class="w-full bg-[#030712] border border-slate-800 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
+                :class="form.clientName.length > LIMITS.clientName ? 'border-red-500/80 focus:border-red-400' : 'border-slate-800 focus:border-amber-500'"
+                class="w-full bg-[#030712] border rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
               />
             </div>
 
             <div class="sm:col-span-3">
               <div class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
                 <label for="q-client-phone">Phone</label>
-                <span>{{ form.clientPhone.length }}/{{ LIMITS.clientPhone }}</span>
+                <span :class="getCounterClass(form.clientPhone, LIMITS.clientPhone)">{{ form.clientPhone.length }}/{{ LIMITS.clientPhone }}</span>
               </div>
               <input
                 id="q-client-phone"
                 name="clientPhone"
                 type="text"
                 autocomplete="off"
-                :maxlength="LIMITS.clientPhone"
+                :maxlength="Math.max(LIMITS.clientPhone, form.clientPhone.length)"
                 :value="form.clientPhone"
                 @input="onUpperInput('clientPhone', $event)"
                 placeholder="Eg: 9207517064"
-                class="w-full bg-[#030712] border border-slate-800 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
+                :class="form.clientPhone.length > LIMITS.clientPhone ? 'border-red-500/80 focus:border-red-400' : 'border-slate-800 focus:border-amber-500'"
+                class="w-full bg-[#030712] border rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
               />
             </div>
 
             <div class="sm:col-span-3">
               <div class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
                 <label for="q-guaranteed-pax">Pax</label>
-                <span>{{ form.guaranteedPax.length }}/{{ LIMITS.guaranteedPax }}</span>
+                <span :class="getCounterClass(form.guaranteedPax, LIMITS.guaranteedPax)">{{ form.guaranteedPax.length }}/{{ LIMITS.guaranteedPax }}</span>
               </div>
               <input
                 id="q-guaranteed-pax"
                 name="guaranteedPax"
                 type="text"
                 autocomplete="off"
-                :maxlength="LIMITS.guaranteedPax"
+                :maxlength="Math.max(LIMITS.guaranteedPax, form.guaranteedPax.length)"
                 :value="form.guaranteedPax"
                 @input="onUpperInput('guaranteedPax', $event)"
                 placeholder="Number of Expected Guests"
-                class="w-full bg-[#030712] border border-slate-800 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
+                :class="form.guaranteedPax.length > LIMITS.guaranteedPax ? 'border-red-500/80 focus:border-red-400' : 'border-slate-800 focus:border-amber-500'"
+                class="w-full bg-[#030712] border rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
               />
             </div>
           </div>
@@ -280,36 +285,38 @@
             <div>
               <div class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
                 <label for="q-date-time">Event Date & Time</label>
-                <span>{{ form.dateTime.length }}/{{ LIMITS.dateTime }}</span>
+                <span :class="getCounterClass(form.dateTime, LIMITS.dateTime)">{{ form.dateTime.length }}/{{ LIMITS.dateTime }}</span>
               </div>
               <input
                 id="q-date-time"
                 name="dateTime"
                 type="text"
                 autocomplete="off"
-                :maxlength="LIMITS.dateTime"
+                :maxlength="Math.max(LIMITS.dateTime, form.dateTime.length)"
                 :value="form.dateTime"
                 @input="onUpperInput('dateTime', $event)"
                 placeholder="DD/MM/YYYY • HH:MM AM/PM TO HH:MM AM/PM"
-                class="w-full bg-[#030712] border border-slate-800 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
+                :class="form.dateTime.length > LIMITS.dateTime ? 'border-red-500/80 focus:border-red-400' : 'border-slate-800 focus:border-amber-500'"
+                class="w-full bg-[#030712] border rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
               />
             </div>
 
             <div>
               <div class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
                 <label for="q-venue-program">Venue & Program</label>
-                <span>{{ form.venueProgram.length }}/{{ LIMITS.venueProgram }}</span>
+                <span :class="getCounterClass(form.venueProgram, LIMITS.venueProgram)">{{ form.venueProgram.length }}/{{ LIMITS.venueProgram }}</span>
               </div>
               <input
                 id="q-venue-program"
                 name="venueProgram"
                 type="text"
                 autocomplete="off"
-                :maxlength="LIMITS.venueProgram"
+                :maxlength="Math.max(LIMITS.venueProgram, form.venueProgram.length)"
                 :value="form.venueProgram"
                 @input="onUpperInput('venueProgram', $event)"
                 placeholder="EVENT NAME AND VENUE"
-                class="w-full bg-[#030712] border border-slate-800 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
+                :class="form.venueProgram.length > LIMITS.venueProgram ? 'border-red-500/80 focus:border-red-400' : 'border-slate-800 focus:border-amber-500'"
+                class="w-full bg-[#030712] border rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
               />
             </div>
           </div>
@@ -328,7 +335,7 @@
                   + ₹
                 </button>
               </div>
-              <span>{{ form.priceDetails.length }}/{{ LIMITS.priceDetails }}</span>
+              <span :class="getCounterClass(form.priceDetails, LIMITS.priceDetails)">{{ form.priceDetails.length }}/{{ LIMITS.priceDetails }}</span>
             </div>
             <input
               id="q-price-details"
@@ -336,11 +343,12 @@
               name="priceDetails"
               type="text"
               autocomplete="off"
-              :maxlength="LIMITS.priceDetails"
+              :maxlength="Math.max(LIMITS.priceDetails, form.priceDetails.length)"
               :value="form.priceDetails"
               @input="onUpperInput('priceDetails', $event)"
               placeholder="₹XXX/- PAX + ₹XXXX/HOUR AC & ELECTRICAL CHARGES"
-              class="w-full bg-[#030712] border border-slate-800 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
+              :class="form.priceDetails.length > LIMITS.priceDetails ? 'border-red-500/80 focus:border-red-400' : 'border-slate-800 focus:border-amber-500'"
+              class="w-full bg-[#030712] border rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
             />
           </div>
 
@@ -349,18 +357,19 @@
             <div>
               <div class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
                 <label for="q-service-heading">Service Menu Title (Uppercase)</label>
-                <span>{{ form.serviceHeading.length }}/{{ LIMITS.serviceHeading }}</span>
+                <span :class="getCounterClass(form.serviceHeading, LIMITS.serviceHeading)">{{ form.serviceHeading.length }}/{{ LIMITS.serviceHeading }}</span>
               </div>
               <input
                 id="q-service-heading"
                 name="serviceHeading"
                 type="text"
                 autocomplete="off"
-                :maxlength="LIMITS.serviceHeading"
+                :maxlength="Math.max(LIMITS.serviceHeading, form.serviceHeading.length)"
                 :value="form.serviceHeading"
                 @input="onUpperInput('serviceHeading', $event)"
                 placeholder="BUFFET SERVICE MENU"
-                class="w-full bg-[#030712] border border-slate-800 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
+                :class="form.serviceHeading.length > LIMITS.serviceHeading ? 'border-red-500/80 focus:border-red-400' : 'border-slate-800 focus:border-amber-500'"
+                class="w-full bg-[#030712] border rounded-xl px-4 py-3 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
               />
             </div>
 
@@ -375,18 +384,19 @@
               <div v-for="(_, nIdx) in 3" :key="'footer-note-' + nIdx">
                 <div class="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
                   <label :for="'q-footer-note-' + nIdx">Note Line #{{ nIdx + 1 }}</label>
-                  <span>{{ form.footerNotes[nIdx].length }}/{{ LIMITS.footerNote }}</span>
+                  <span :class="getCounterClass(form.footerNotes[nIdx], LIMITS.footerNote)">{{ form.footerNotes[nIdx].length }}/{{ LIMITS.footerNote }}</span>
                 </div>
                 <input
                   :id="'q-footer-note-' + nIdx"
                   :name="'footerNote_' + nIdx"
                   type="text"
                   autocomplete="off"
-                  :maxlength="LIMITS.footerNote"
+                  :maxlength="Math.max(LIMITS.footerNote, form.footerNotes[nIdx].length)"
                   :value="form.footerNotes[nIdx]"
                   @input="onFooterNoteInput(nIdx, $event)"
                   :placeholder="nIdx === 0 ? 'Contact Us : 9633817064' : 'Optional additional note line...'"
-                  class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-lg px-3.5 py-2.5 text-sm text-white capitalize placeholder:text-slate-600 focus:outline-none transition-colors"
+                  :class="form.footerNotes[nIdx].length > LIMITS.footerNote ? 'border-red-500/80 focus:border-red-400' : 'border-slate-800 focus:border-amber-500'"
+                  class="w-full bg-slate-950 border rounded-lg px-3.5 py-2.5 text-sm text-white capitalize placeholder:text-slate-600 focus:outline-none transition-colors"
                 />
               </div>
             </div>
@@ -424,36 +434,38 @@
               <div class="sm:col-span-6">
                 <div class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
                   <label :for="'course-title-' + course.id">Course Heading #{{ cIdx + 1 }}</label>
-                  <span>{{ course.title.length }}/{{ LIMITS.courseTitle }}</span>
+                  <span :class="getCounterClass(course.title, LIMITS.courseTitle)">{{ course.title.length }}/{{ LIMITS.courseTitle }}</span>
                 </div>
                 <input
                   :id="'course-title-' + course.id"
                   :name="'courseTitle_' + cIdx"
                   type="text"
                   autocomplete="off"
-                  :maxlength="LIMITS.courseTitle"
+                  :maxlength="Math.max(LIMITS.courseTitle, course.title.length)"
                   :value="course.title"
                   @input="onCourseUpperInput(course, 'title', $event)"
                   placeholder="WELCOME DRINK / MAIN COURSE"
-                  class="w-full bg-[#030712] border border-slate-800 focus:border-amber-500 rounded-xl px-4 py-2.5 text-sm font-semibold text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
+                  :class="course.title.length > LIMITS.courseTitle ? 'border-red-500/80 focus:border-red-400' : 'border-slate-800 focus:border-amber-500'"
+                  class="w-full bg-[#030712] border rounded-xl px-4 py-2.5 text-sm font-semibold text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
                 />
               </div>
 
               <div class="sm:col-span-4">
                 <div class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
                   <label :for="'course-timing-' + course.id">Timing (Optional)</label>
-                  <span>{{ course.timing.length }}/{{ LIMITS.courseTiming }}</span>
+                  <span :class="getCounterClass(course.timing, LIMITS.courseTiming)">{{ course.timing.length }}/{{ LIMITS.courseTiming }}</span>
                 </div>
                 <input
                   :id="'course-timing-' + course.id"
                   :name="'courseTiming_' + cIdx"
                   type="text"
                   autocomplete="off"
-                  :maxlength="LIMITS.courseTiming"
+                  :maxlength="Math.max(LIMITS.courseTiming, course.timing.length)"
                   :value="course.timing"
                   @input="onCourseUpperInput(course, 'timing', $event)"
                   placeholder="@ 10:45 AM"
-                  class="w-full bg-[#030712] border border-slate-800 focus:border-amber-500 rounded-xl px-3.5 py-2.5 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
+                  :class="course.timing.length > LIMITS.courseTiming ? 'border-red-500/80 focus:border-red-400' : 'border-slate-800 focus:border-amber-500'"
+                  class="w-full bg-[#030712] border rounded-xl px-3.5 py-2.5 text-sm text-white uppercase placeholder:text-slate-600 focus:outline-none transition-colors"
                 />
               </div>
 
@@ -499,36 +511,38 @@
                 <div class="sm:col-span-6">
                   <div class="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
                     <label :for="'dish-name-' + item.id">Dish #{{ iIdx + 1 }}</label>
-                    <span>{{ item.name.length }}/{{ LIMITS.itemName }}</span>
+                    <span :class="getCounterClass(item.name, LIMITS.itemName)">{{ item.name.length }}/{{ LIMITS.itemName }}</span>
                   </div>
                   <input
                     :id="'dish-name-' + item.id"
                     :name="'dishName_' + cIdx + '_' + iIdx"
                     type="text"
                     autocomplete="off"
-                    :maxlength="LIMITS.itemName"
+                    :maxlength="Math.max(LIMITS.itemName, item.name.length)"
                     :value="item.name"
                     @input="onCapitalizeInput(item, 'name', $event)"
                     placeholder="Pineapple Mint Lime"
-                    class="w-full bg-slate-950 border border-slate-800 focus:border-[#0068fe] rounded-lg px-3.5 py-2.5 text-sm text-white capitalize placeholder:text-slate-600 focus:outline-none transition-colors"
+                    :class="item.name.length > LIMITS.itemName ? 'border-red-500/80 focus:border-red-400' : 'border-slate-800 focus:border-[#0068fe]'"
+                    class="w-full bg-slate-950 border rounded-lg px-3.5 py-2.5 text-sm text-white capitalize placeholder:text-slate-600 focus:outline-none transition-colors"
                   />
                 </div>
 
                 <div class="sm:col-span-4">
                   <div class="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
                     <label :for="'dish-note-' + item.id">Sub-note (Optional)</label>
-                    <span>{{ item.note.length }}/{{ LIMITS.itemNote }}</span>
+                    <span :class="getCounterClass(item.note, LIMITS.itemNote)">{{ item.note.length }}/{{ LIMITS.itemNote }}</span>
                   </div>
                   <input
                     :id="'dish-note-' + item.id"
                     :name="'dishNote_' + cIdx + '_' + iIdx"
                     type="text"
                     autocomplete="off"
-                    :maxlength="LIMITS.itemNote"
+                    :maxlength="Math.max(LIMITS.itemNote, item.note.length)"
                     :value="item.note"
                     @input="onCapitalizeInput(item, 'note', $event)"
                     placeholder="Raitha, Pickle"
-                    class="w-full bg-slate-950 border border-slate-800 focus:border-[#0068fe] rounded-lg px-3.5 py-2.5 text-sm text-slate-300 capitalize placeholder:text-slate-600 focus:outline-none transition-colors"
+                    :class="item.note.length > LIMITS.itemNote ? 'border-red-500/80 focus:border-red-400' : 'border-slate-800 focus:border-[#0068fe]'"
+                    class="w-full bg-slate-950 border rounded-lg px-3.5 py-2.5 text-sm text-slate-300 capitalize placeholder:text-slate-600 focus:outline-none transition-colors"
                   />
                 </div>
 
@@ -640,6 +654,77 @@
       @close="isJsonModalOpen = false"
       @load-json="handleQuotationJsonLoaded"
     />
+    <!-- Over-Limit Character Warning Popup (Flexbox • Appears Only When Imported JSON Exceeds Limits) -->
+    <Transition
+      enter-active-class="transition duration-200 ease-out"
+      enter-from-class="opacity-0 scale-95"
+      enter-to-class="opacity-100 scale-100"
+      leave-active-class="transition duration-150 ease-in"
+      leave-from-class="opacity-100 scale-100"
+      leave-to-class="opacity-0 scale-95"
+    >
+      <div
+        v-if="isOverLimitModalOpen"
+        @click.self="isOverLimitModalOpen = false"
+        class="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm pt-25.5 md:pt-27 pb-4 px-3 sm:px-4"
+      >
+        <div class="bg-slate-900 border border-amber-400/50 rounded-2xl w-full max-w-lg max-h-[calc(100dvh-124px)] flex flex-col shadow-2xl overflow-hidden">
+          
+          <div class="px-5 py-4 border-b border-slate-800 flex items-center justify-between gap-3 shrink-0">
+            <div class="flex items-center gap-2.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
+              <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-white">
+                Character Limit Notice ({{ overLimitWarnings.length }})
+              </h3>
+            </div>
+            <button
+              type="button"
+              @click="isOverLimitModalOpen = false"
+              aria-label="Close Warning"
+              class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="min-h-0 flex-1 p-5 overflow-y-auto space-y-3.5 custom-scrollbar">
+            <p class="text-xs leading-relaxed text-slate-300 bg-amber-500/10 border border-amber-500/25 rounded-xl p-3.5">
+              Your quotation is ready. Some text exceeds the recommended character limits and has been shortened in the A4 preview.<br />The complete text is preserved in the editor if you'd like to adjust it.
+            </p>
+
+            <div class="flex flex-col gap-2">
+              <button
+                v-for="(warn, wIdx) in overLimitWarnings"
+                :key="'over-limit-' + wIdx"
+                type="button"
+                @click="jumpToOverLimitField(warn.targetId)"
+                class="w-full flex items-center justify-between gap-3 bg-[#030712] hover:bg-slate-800/80 border border-slate-800 hover:border-amber-400/50 rounded-xl px-3.5 py-2.5 text-left transition-all cursor-pointer"
+              >
+                <span class="min-w-0 flex-1 text-xs font-semibold text-slate-200 truncate">
+                  {{ warn.label }}
+                </span>
+                <span class="shrink-0 px-2 py-0.5 rounded-md bg-red-500/15 text-red-400 text-[11px] font-extrabold">
+                  {{ warn.length }}/{{ warn.max }}
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <div class="px-5 py-3.5 border-t border-slate-800 flex justify-end shrink-0 bg-slate-950/50">
+            <button
+              type="button"
+              @click="isOverLimitModalOpen = false"
+              class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-slate-950 text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer"
+            >
+              Got It
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -653,7 +738,7 @@ const CANVAS_H = 2339
 const MAX_COURSES = 12
 const MAX_ITEMS_PER_COURSE = 28
 const MAX_TOTAL_ITEMS = 80
-const COURSE_UNBREAKABLE_MAX = 15
+const COURSE_UNBREAKABLE_MAX = 14
 
 const LIMITS = {
   refNo: 24,
@@ -740,36 +825,57 @@ const createSampleState = () => ({
 
 const form = reactive(createSampleState())
 
+const clampText = (val, max) => String(val || '').slice(0, max).trim()
+
+const getCounterClass = (val, max) => {
+  const len = String(val || '').length
+  if (len >= max) return 'text-red-400 font-extrabold'
+  if (len >= Math.max(1, max - 5)) return 'text-orange-400 font-extrabold'
+  return 'text-slate-400'
+}
+
 const toUpperClean = (val, max) => String(val || '').toUpperCase().slice(0, max)
 
-const toCapitalizeClean = (val, max) => {
-  const sliced = String(val || '').slice(0, max)
-  return sliced.replace(/\S+/g, (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+const toUpperImported = (val) => String(val || '').trim().toUpperCase()
+
+const toCapitalizeImported = (val) => {
+  const trimmed = String(val || '').trim()
+  if (!trimmed) return ''
+  const base =
+    /[A-Z]{4}/.test(trimmed) && !/[a-z]/.test(trimmed)
+      ? trimmed.toLowerCase().replace(/\b(gst|cgst|sgst|igst|ac|a\/c|bbq|caps|pax|am|pm|vip|dj|led|ro|tv)\b/g, (m) => m.toUpperCase())
+      : trimmed
+  return base.replace(/(^|[\s([/-])([a-z])/g, (_, sep, ch) => sep + ch.toUpperCase())
 }
 
 const onUpperInput = (key, e) => {
-  const formatted = toUpperClean(e.target.value, LIMITS[key])
-  form[key] = formatted
-  e.target.value = formatted
+  const rawUpper = String(e.target.value || '').toUpperCase()
+  const nextVal = applyLiveEditCap(rawUpper, form[key], LIMITS[key])
+  form[key] = nextVal
+  e.target.value = nextVal
 }
 
 const onCourseUpperInput = (course, key, e) => {
   const max = key === 'title' ? LIMITS.courseTitle : LIMITS.courseTiming
-  const formatted = toUpperClean(e.target.value, max)
-  course[key] = formatted
-  e.target.value = formatted
+  const rawUpper = String(e.target.value || '').toUpperCase()
+  const nextVal = applyLiveEditCap(rawUpper, course[key], max)
+  course[key] = nextVal
+  e.target.value = nextVal
 }
 
 const onCapitalizeInput = (target, key, e) => {
-  const formatted = toCapitalizeClean(e.target.value, LIMITS[key])
-  target[key] = formatted
-  e.target.value = formatted
+  const max = key === 'name' ? LIMITS.itemName : LIMITS.itemNote
+  const rawCap = String(e.target.value || '').replace(/(^|[\s([/-])([a-z])/g, (_, sep, ch) => sep + ch.toUpperCase())
+  const nextVal = applyLiveEditCap(rawCap, target[key], max)
+  target[key] = nextVal
+  e.target.value = nextVal
 }
 
 const onFooterNoteInput = (idx, e) => {
-  const formatted = toCapitalizeClean(e.target.value, LIMITS.footerNote)
-  form.footerNotes[idx] = formatted
-  e.target.value = formatted
+  const rawCap = String(e.target.value || '').replace(/(^|[\s([/-])([a-z])/g, (_, sep, ch) => sep + ch.toUpperCase())
+  const nextVal = applyLiveEditCap(rawCap, form.footerNotes[idx], LIMITS.footerNote)
+  form.footerNotes[idx] = nextVal
+  e.target.value = nextVal
 }
 
 const insertRupeeSymbol = async () => {
@@ -789,14 +895,24 @@ const scaleBadgeText = computed(() => {
   return `${colText} • ${pgText}${isDirty.value ? ' • Unsaved' : ''}`
 })
 
-const addCourse = () => {
+const addCourse = async () => {
   if (form.courses.length >= MAX_COURSES) return
+  const newId = makeId()
   form.courses.push({
-    id: makeId(),
+    id: newId,
     title: 'STARTERS',
     timing: '',
     items: [{ id: makeId(), name: '', note: '' }]
   })
+  await nextTick()
+  const el = document.getElementById(`course-title-${newId}`)
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    if (window.matchMedia('(min-width: 1024px)').matches) {
+      el.focus({ preventScroll: true })
+      el.select()
+    }
+  }
 }
 
 const removeCourse = (idx) => {
@@ -820,11 +936,28 @@ const moveItem = (course, from, to) => {
   course.items.splice(to, 0, moved)
 }
 
+const overLimitWarnings = ref([])
+const isOverLimitModalOpen = ref(false)
+
+const jumpToOverLimitField = async (targetId) => {
+  isOverLimitModalOpen.value = false
+  if (!targetId) return
+  mobileTab.value = 'editor'
+  await nextTick()
+  const el = document.getElementById(targetId)
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    el.focus({ preventScroll: true })
+  }
+}
+
 const resetToSample = async () => {
   if (isDirty.value && !confirm('Discard unsaved quotation changes and reset to sample?')) {
     return
   }
   isSuppressingDirty = true
+  overLimitWarnings.value = []
+  isOverLimitModalOpen.value = false
   Object.assign(form, createSampleState())
   await nextTick()
   isDirty.value = false
@@ -840,21 +973,61 @@ const openJsonModal = (tab = 'import') => {
 }
 
 const handleQuotationJsonLoaded = ({ data, mode }) => {
+  const warnings = []
+  const checkWarn = (val, max, label, targetId) => {
+    if (val.length > max) {
+      warnings.push({ label, length: val.length, max, targetId })
+    }
+  }
+
   if (mode === 'full') {
-    if (data.refNo) form.refNo = toUpperClean(data.refNo, LIMITS.refNo)
-    if (data.quoteDate) form.quoteDate = toUpperClean(data.quoteDate, LIMITS.quoteDate)
-    if (data.clientName !== undefined) form.clientName = toUpperClean(data.clientName, LIMITS.clientName)
-    if (data.clientPhone !== undefined) form.clientPhone = toUpperClean(data.clientPhone, LIMITS.clientPhone)
-    if (data.guaranteedPax !== undefined) form.guaranteedPax = toUpperClean(data.guaranteedPax, LIMITS.guaranteedPax)
-    if (data.dateTime !== undefined) form.dateTime = toUpperClean(data.dateTime, LIMITS.dateTime)
-    if (data.venueProgram !== undefined) form.venueProgram = toUpperClean(data.venueProgram, LIMITS.venueProgram)
-    if (data.priceDetails !== undefined) form.priceDetails = toUpperClean(data.priceDetails, LIMITS.priceDetails)
-    if (data.serviceHeading) form.serviceHeading = toUpperClean(data.serviceHeading, LIMITS.serviceHeading)
+    if (data.refNo) {
+      form.refNo = toUpperImported(data.refNo)
+      checkWarn(form.refNo, LIMITS.refNo, 'Quotation Ref No.', 'q-ref-no')
+    }
+    if (data.quoteDate) {
+      form.quoteDate = toUpperImported(data.quoteDate)
+      checkWarn(form.quoteDate, LIMITS.quoteDate, 'Quotation Issue Date', 'q-quote-date')
+    }
+    if (data.clientName !== undefined) {
+      form.clientName = toUpperImported(data.clientName)
+      checkWarn(form.clientName, LIMITS.clientName, 'Order To / Client', 'q-client-name')
+    }
+    if (data.clientPhone !== undefined) {
+      form.clientPhone = toUpperImported(data.clientPhone)
+      checkWarn(form.clientPhone, LIMITS.clientPhone, 'Phone', 'q-client-phone')
+    }
+    if (data.guaranteedPax !== undefined) {
+      form.guaranteedPax = toUpperImported(data.guaranteedPax)
+      checkWarn(form.guaranteedPax, LIMITS.guaranteedPax, 'Pax', 'q-guaranteed-pax')
+    }
+    if (data.dateTime !== undefined) {
+      form.dateTime = toUpperImported(data.dateTime)
+      checkWarn(form.dateTime, LIMITS.dateTime, 'Event Date & Time', 'q-date-time')
+    }
+    if (data.venueProgram !== undefined) {
+      form.venueProgram = toUpperImported(data.venueProgram)
+      checkWarn(form.venueProgram, LIMITS.venueProgram, 'Venue & Program', 'q-venue-program')
+    }
+    if (data.priceDetails !== undefined) {
+      form.priceDetails = toUpperImported(data.priceDetails)
+      checkWarn(form.priceDetails, LIMITS.priceDetails, 'Price Details', 'q-price-details')
+    }
+    if (data.serviceHeading) {
+      form.serviceHeading = toUpperImported(data.serviceHeading)
+      checkWarn(form.serviceHeading, LIMITS.serviceHeading, 'Service Menu Title', 'q-service-heading')
+    }
 
     if (Array.isArray(data.footerNotes)) {
-      form.footerNotes = [0, 1, 2].map((i) => toCapitalizeClean(data.footerNotes[i] || '', LIMITS.footerNote))
+      form.footerNotes = [0, 1, 2].map((i) => {
+        const val = toCapitalizeImported(data.footerNotes[i] || '')
+        checkWarn(val, LIMITS.footerNote, `Note Line #${i + 1}`, `q-footer-note-${i}`)
+        return val
+      })
     } else if (data.footerNote !== undefined) {
-      form.footerNotes = [toCapitalizeClean(data.footerNote, LIMITS.footerNote), '', '']
+      const val = toCapitalizeImported(data.footerNote)
+      checkWarn(val, LIMITS.footerNote, 'Note Line #1', 'q-footer-note-0')
+      form.footerNotes = [val, '', '']
     }
   }
 
@@ -862,30 +1035,50 @@ const handleQuotationJsonLoaded = ({ data, mode }) => {
     let budget = MAX_TOTAL_ITEMS
     const cleanCourses = []
 
-    for (const rawCourse of data.courses.slice(0, MAX_COURSES)) {
-      if (budget <= 0) break
+    data.courses.slice(0, MAX_COURSES).forEach((rawCourse, cIdx) => {
+      if (budget <= 0) return
+      const courseId = makeId()
+      const courseTitle = toUpperImported(rawCourse.title || 'COURSE')
+      const courseTiming = toUpperImported(rawCourse.timing || '')
+      checkWarn(courseTitle, LIMITS.courseTitle, `Course #${cIdx + 1} Heading`, `course-title-${courseId}`)
+      checkWarn(courseTiming, LIMITS.courseTiming, `Course #${cIdx + 1} Timing`, `course-timing-${courseId}`)
+
       const rawItems = Array.isArray(rawCourse.items) ? rawCourse.items : []
       const allowedCount = Math.min(rawItems.length, MAX_ITEMS_PER_COURSE, budget)
-      const mappedItems = rawItems.slice(0, allowedCount).map((it) => ({
-        id: makeId(),
-        name: toCapitalizeClean(typeof it === 'string' ? it : it?.name, LIMITS.itemName),
-        note: toCapitalizeClean(typeof it === 'object' ? it?.note : '', LIMITS.itemNote)
-      }))
+      const mappedItems = rawItems.slice(0, allowedCount).map((it, iIdx) => {
+        const itemId = makeId()
+        const dName = toCapitalizeImported(typeof it === 'string' ? it : it?.name)
+        const dNote = toCapitalizeImported(typeof it === 'object' ? it?.note : '')
+        checkWarn(dName, LIMITS.itemName, `Course #${cIdx + 1} • Dish #${iIdx + 1}`, `dish-name-${itemId}`)
+        checkWarn(dNote, LIMITS.itemNote, `Course #${cIdx + 1} • Dish #${iIdx + 1} Sub-note`, `dish-note-${itemId}`)
+        return { id: itemId, name: dName, note: dNote }
+      })
 
       budget -= mappedItems.length
       cleanCourses.push({
-        id: makeId(),
-        title: toUpperClean(rawCourse.title || 'COURSE', LIMITS.courseTitle),
-        timing: toUpperClean(rawCourse.timing || '', LIMITS.courseTiming),
+        id: courseId,
+        title: courseTitle,
+        timing: courseTiming,
         items: mappedItems.length ? mappedItems : [{ id: makeId(), name: '', note: '' }]
       })
-    }
+    })
 
     if (cleanCourses.length > 0) {
       form.courses = cleanCourses
     }
+  } else if (mode === 'full' && Array.isArray(data.courses) && data.courses.length === 0) {
+    form.courses = [
+      {
+        id: makeId(),
+        title: '',
+        timing: '',
+        items: [{ id: makeId(), name: '', note: '' }]
+      }
+    ]
   }
 
+  overLimitWarnings.value = warnings
+  isOverLimitModalOpen.value = warnings.length > 0
   isDirty.value = true
 }
 
@@ -906,12 +1099,6 @@ onBeforeRouteLeave(() => {
 let logoImage = null
 let illustrationImage = null
 let rafId = null
-
-const measureTrackedWidth = (ctx, text, trackingPx = 0) => {
-  const chars = Array.from(String(text || ''))
-  if (!chars.length) return 0
-  return chars.reduce((sum, ch) => sum + ctx.measureText(ch).width, 0) + trackingPx * (chars.length - 1)
-}
 
 const drawTrackedText = (ctx, text, x, y, trackingPx = 0, align = 'center') => {
   const str = String(text || '')
@@ -1153,17 +1340,7 @@ const renderSinglePageCanvas = (canvas, pageSlice, pageIdx, totalPages, isTwoCol
   const titleBandBottomY = 486
   ctx.fillStyle = '#0F172A'
   ctx.font = '700 54px "Faculty Glyphic", serif'
-  const qTitleWidth = drawTrackedText(ctx, 'QUOTATION', marginX + 10, 436, 4.5, 'left')
-
-    // Signature Angled Amber Slash "/"
-//   const slashBaseX = marginX + 10 + qTitleWidth + 28
-//   ctx.strokeStyle = '#EA8C1E'
-//   ctx.lineWidth = 4.6
-//   ctx.lineCap = 'round'
-//   ctx.beginPath()
-//   ctx.moveTo(slashBaseX, 454)
-//   ctx.lineTo(slashBaseX + 34, 374)
-//   ctx.stroke()
+  drawTrackedText(ctx, 'QUOTATION', marginX + 10, 436, 4.5, 'left')
 
   // Right Reference & Date Block
   const refBarX = 944
@@ -1184,8 +1361,8 @@ const renderSinglePageCanvas = (canvas, pageSlice, pageIdx, totalPages, isTwoCol
 
   ctx.fillStyle = '#0F172A'
   ctx.font = '700 22.5px "Inter", sans-serif'
-  ctx.fillText(form.refNo.trim() || '—', refBarX + 174, 405)
-  ctx.fillText(form.quoteDate.trim() || formatTodayDate(), refBarX + 174, 448)
+  ctx.fillText(clampText(form.refNo, LIMITS.refNo) || '—', refBarX + 174, 405)
+  ctx.fillText(clampText(form.quoteDate, LIMITS.quoteDate) || formatTodayDate(), refBarX + 174, 448)
 
   // Subtle Sub-Band Hairline
   ctx.strokeStyle = '#E2E8F0'
@@ -1204,19 +1381,23 @@ const renderSinglePageCanvas = (canvas, pageSlice, pageIdx, totalPages, isTwoCol
   const valMaxW = cardW - labelColW - 60
 
   const paxFormatted = (() => {
-    const raw = form.guaranteedPax.trim()
+    const raw = clampText(form.guaranteedPax, LIMITS.guaranteedPax)
     if (!raw) return ''
     return raw.includes('PAX') ? raw : `PAX : ${raw}`
   })()
 
-  const orderRowVal = [form.clientName.trim(), form.clientPhone.trim(), paxFormatted].filter(Boolean).join('   •   ') || '—'
+  const orderRowVal = [
+    clampText(form.clientName, LIMITS.clientName),
+    clampText(form.clientPhone, LIMITS.clientPhone),
+    paxFormatted
+  ].filter(Boolean).join('   •   ') || '—'
 
   ctx.font = '600 22.5px "Inter", sans-serif'
   const summaryRows = [
     { icon: 'user', label: 'ORDER TO', lines: wrapTextLines(ctx, orderRowVal, valMaxW).slice(0, 2) },
-    { icon: 'calendar', label: 'DATE & TIME', lines: wrapTextLines(ctx, form.dateTime.trim() || '—', valMaxW).slice(0, 2) },
-    { icon: 'pin', label: 'VENUE & PROGRAM', lines: wrapTextLines(ctx, form.venueProgram.trim() || '—', valMaxW).slice(0, 2) },
-    { icon: 'rupee', label: 'PRICE DETAILS', lines: wrapTextLines(ctx, form.priceDetails.trim() || '—', valMaxW).slice(0, 2) }
+    { icon: 'calendar', label: 'DATE & TIME', lines: wrapTextLines(ctx, clampText(form.dateTime, LIMITS.dateTime) || '—', valMaxW).slice(0, 2) },
+    { icon: 'pin', label: 'VENUE & PROGRAM', lines: wrapTextLines(ctx, clampText(form.venueProgram, LIMITS.venueProgram) || '—', valMaxW).slice(0, 2) },
+    { icon: 'rupee', label: 'PRICE DETAILS', lines: wrapTextLines(ctx, clampText(form.priceDetails, LIMITS.priceDetails) || '—', valMaxW).slice(0, 2) }
   ]
 
   const rowHeights = summaryRows.map((r) => (r.lines.length > 1 ? 90 : 66))
@@ -1285,14 +1466,14 @@ const renderSinglePageCanvas = (canvas, pageSlice, pageIdx, totalPages, isTwoCol
 
   // -- SECTION D: 1-TO-2 COLUMN NUMBERED BANQUET MENU & CENTERED 3-LINE NOTES --
   const FOOTER_TOP_Y = 1924
-  const activeNotes = form.footerNotes.map((n) => n.trim()).filter(Boolean)
+  const activeNotes = form.footerNotes.map((n) => clampText(n, LIMITS.footerNote)).filter(Boolean)
   const notesReservedH = activeNotes.length > 0 ? 24 + activeNotes.length * 30 + 24 : 0
   const menuStartY = cardY + totalCardH + 46
   const menuMaxBottomY = FOOTER_TOP_Y - 26 - notesReservedH
   const scale = pageSlice.scale || 1
 
   let colTopY = menuStartY
-  const headingStr = form.serviceHeading.trim()
+  const headingStr = clampText(form.serviceHeading, LIMITS.serviceHeading)
 
   // 1. Service Menu Title Banner (Left on 1-Col; Globally Centered on 2-Col / Multi-Page)
   if (headingStr || totalPages > 1) {
@@ -1554,16 +1735,20 @@ const getMeasureCtx = () => {
 const measureSummaryCardBottomY = (ctx) => {
   const cardW = CANVAS_W - 176
   const valMaxW = cardW - 436 - 60
-  const rawPax = form.guaranteedPax.trim()
+  const rawPax = clampText(form.guaranteedPax, LIMITS.guaranteedPax)
   const paxFormatted = rawPax ? (rawPax.includes('PAX') ? rawPax : `PAX : ${rawPax}`) : ''
-  const orderRowVal = [form.clientName.trim(), form.clientPhone.trim(), paxFormatted].filter(Boolean).join('   •   ') || '—'
+  const orderRowVal = [
+    clampText(form.clientName, LIMITS.clientName),
+    clampText(form.clientPhone, LIMITS.clientPhone),
+    paxFormatted
+  ].filter(Boolean).join('   •   ') || '—'
 
   ctx.font = '600 22.5px "Inter", sans-serif'
   const rows = [
     wrapTextLines(ctx, orderRowVal, valMaxW).slice(0, 2),
-    wrapTextLines(ctx, form.dateTime.trim() || '—', valMaxW).slice(0, 2),
-    wrapTextLines(ctx, form.venueProgram.trim() || '—', valMaxW).slice(0, 2),
-    wrapTextLines(ctx, form.priceDetails.trim() || '—', valMaxW).slice(0, 2)
+    wrapTextLines(ctx, clampText(form.dateTime, LIMITS.dateTime) || '—', valMaxW).slice(0, 2),
+    wrapTextLines(ctx, clampText(form.venueProgram, LIMITS.venueProgram) || '—', valMaxW).slice(0, 2),
+    wrapTextLines(ctx, clampText(form.priceDetails, LIMITS.priceDetails) || '—', valMaxW).slice(0, 2)
   ]
   const totalCardH = rows.reduce((sum, lines) => sum + (lines.length > 1 ? 90 : 66), 0)
   return 514 + totalCardH
@@ -1702,26 +1887,27 @@ const drawMenuColumnSlices = (ctx, slices, colX, startY, colW, scale) => {
 }
 
 const computeQuotationPages = (ctx) => {
-  const FOOTER_TOP_Y = 1924
+  // Top of computeQuotationPages:
+  const FOOTER_TOP_Y_INNER = 1924
   const marginX = 88
   const rightEdge = CANVAS_W - marginX
   const summaryBottomY = measureSummaryCardBottomY(ctx)
-  const activeNotes = form.footerNotes.map((n) => n.trim()).filter(Boolean)
+  const activeNotes = form.footerNotes.map((n) => clampText(n, LIMITS.footerNote)).filter(Boolean)
   const notesReservedH = activeNotes.length > 0 ? 24 + activeNotes.length * 30 + 24 : 0
   const menuStartY = summaryBottomY + 46
-  const hasHeading = Boolean(form.serviceHeading.trim())
-  const menuMaxBottomY = FOOTER_TOP_Y - 26 - notesReservedH
+  const hasHeading = Boolean(clampText(form.serviceHeading, LIMITS.serviceHeading))
+  const menuMaxBottomY = FOOTER_TOP_Y_INNER - 26 - notesReservedH
 
   const activeCourses = form.courses
     .map((c) => ({
-      title: c.title.trim(),
-      timing: c.timing.trim(),
+      title: clampText(c.title, LIMITS.courseTitle),
+      timing: clampText(c.timing, LIMITS.courseTiming),
       items: c.items
-        .filter((it) => it.name.trim())
+        .filter((it) => clampText(it.name, LIMITS.itemName))
         .map((it, idx) => ({
           dishNumber: idx + 1,
-          name: it.name.trim(),
-          note: it.note.trim()
+          name: clampText(it.name, LIMITS.itemName),
+          note: clampText(it.note, LIMITS.itemNote)
         }))
     }))
     .filter((c) => c.title || c.items.length)
@@ -1975,7 +2161,7 @@ const getContinuousTimestamp = () => {
 }
 
 const buildSlugFilename = (ext, pageIndex = null, totalPages = 1, fixedTs = null) => {
-  const cleanClient = (form.clientName || 'Guest')
+  const cleanClient = (clampText(form.clientName, LIMITS.clientName) || 'Guest')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
