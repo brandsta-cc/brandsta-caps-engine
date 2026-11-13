@@ -131,7 +131,8 @@ import { ref, watch } from 'vue'
 
 const props = defineProps({
   isOpen: { type: Boolean, default: false },
-  initialTab: { type: String, default: 'import' }
+  initialTab: { type: String, default: 'import' },
+  isDirty: { type: Boolean, default: false }
 })
 
 const emit = defineEmits(['close', 'load-json'])
@@ -152,37 +153,64 @@ watch(() => props.initialTab, (tab) => {
   activeTab.value = tab
 })
 
-const aiPromptText = `Convert the banquet/event inquiry below into a strict JSON object for Hotel CAPS Quotation Studio. Output ONLY raw valid JSON (no markdown explanation) using this exact structure and character limits:
+const aiPromptText = `You are a precision quotation data extractor for Hotel CAPS (Koduvayur, Palakkad). Convert the client's banquet, catering, or event inquiry below into a strict JSON contract for the Hotel CAPS A4 Quotation Studio.
+
+### 1. COMMERCIAL DATA INTEGRITY & ZERO-HALLUCINATION RULES (CRITICAL)
+- Preserve Exact Client Facts: NEVER invent, omit, rename, duplicate, or silently alter any supplied dish, accompaniment, price, pax count, venue, date, or condition.
+- Zero Assumed Policies: NEVER invent or assume GST/tax rates, advance-payment percentages, cancellation rules, AC/hall hour charges, or phone numbers inside "priceDetails" or "footerNotes". Include them ONLY if explicitly stated in the inquiry; otherwise leave them as "".
+- Overflow & Truncation Disclosure: The studio schema supports up to 12 courses, 28 items per course, and 80 total dishes. If the inquiry exceeds 80 dishes or any text must be abbreviated to fit a character limit, NEVER drop items silently—flag the exact omitted/shortened details clearly below the JSON block.
+- Strict Date & Reference Separation:
+  - "refNo": Leave as "" unless a reference number is explicitly provided (the app generates its own).
+  - "quoteDate": Quotation issue date ONLY (DD/MM/YYYY). Leave as "" unless explicitly provided—NEVER put the event date here.
+  - "dateTime": The actual event date and time range.
+
+### 2. DIVISION OF RESPONSIBILITIES & COURSE GROUPING
+- Quotation Studio (Renderer) owns all pixel measurement, 1-vs-2 column switching, automatic course/dish numbering, and multi-page A4 rendering.
+- Your Role (Extractor) is to structure courses cleanly so the renderer can pack pages optimally:
+  - Courses with <= 15 items stay together as unbreakable column blocks.
+  - Courses with 16–28 items wrap across Column 1 and Column 2 on the same page (repeating the course header automatically).
+  - Dense-Course Fallback: If a single category has > 28 dishes—OR has 18+ dishes where most items include long names and accompaniments—divide it into logical culinary sub-courses (e.g., "STARTERS - VEG" & "STARTERS - NON-VEG", or "MAIN COURSE" & "BREADS & RICE") without changing or dropping any dish.
+  - NEVER include numbers (1., 2.) or bullets (•, -, *) inside "title" or "name".
+  - Move side accompaniments (e.g., "Raitha, Pickle", "Mint Chutney, Salad") into the dish's "note" field rather than "name".
+
+### 3. STRICT JSON VALIDATION & SCHEMA
+- Output valid JSON inside a single \`\`\`json code block using double-quoted strings, exact keys/types below, no extra properties, and no trailing commas.
+- The strings shown in the schema below are field instructions—NEVER output those descriptions, "N/A", "TBD", or placeholders as literal values. Use "" for any unknown string.
 
 {
-  "refNo": "Optional string <= 24 chars (or leave empty string)",
-  "quoteDate": "DD/MM/YYYY <= 16 chars (or leave empty string)",
-  "clientName": "UPPERCASE client or company name <= 32 chars",
-  "clientPhone": "Digits only <= 15 chars",
-  "guaranteedPax": "Format like 'PAX : 60' <= 14 chars",
-  "dateTime": "Event date & time range <= 42 chars (e.g. '09/10/2026 • 11:00 AM TO 02:00 PM')",
-  "venueProgram": "Venue & occasion <= 52 chars (e.g. 'CAPS BANQUET HALL - BIRTHDAY FUNCTION')",
-  "priceDetails": "Rates with ₹ symbol <= 78 chars (e.g. '₹300/- PAX + ₹1000/HOUR AC & ELECTRICAL CHARGES')",
-  "serviceHeading": "e.g. 'BUFFET SERVICE MENU' or 'SITTING SERVICE MENU' <= 34 chars",
-  "footerNote": "Optional contact/note <= 64 chars (e.g. 'Contact Us : 9633817064')",
+  "refNo": "Explicit ref number <= 24 chars, or \"\"",
+  "quoteDate": "Explicit quotation issue date DD/MM/YYYY <= 16 chars, or \"\"",
+  "clientName": "UPPERCASE client or company name <= 32 chars, or \"\"",
+  "clientPhone": "Digits only <= 15 chars, or \"\"",
+  "guaranteedPax": "Format like 'PAX : 60' <= 14 chars, or \"\"",
+  "dateTime": "Event date & time range <= 42 chars (e.g. '09/10/2026 • 11:00 AM TO 02:00 PM'), or \"\"",
+  "venueProgram": "UPPERCASE venue & occasion <= 52 chars, or \"\"",
+  "priceDetails": "Explicitly stated rates with ₹ symbol <= 78 chars, or \"\"",
+  "serviceHeading": "UPPERCASE menu heading <= 34 chars (e.g. 'BUFFET SERVICE MENU'), or \"\"",
+  "footerNotes": [
+    "Explicitly stated policy/note line 1 in Title Case <= 85 chars, or \"\"",
+    "Explicitly stated policy/note line 2 in Title Case <= 85 chars, or \"\"",
+    "Explicitly stated policy/note line 3 in Title Case <= 85 chars, or \"\""
+  ],
   "courses": [
     {
-      "title": "Course Name <= 26 chars (e.g. 'WELCOME DRINK', 'MAIN COURSE', 'DESSERTS')",
-      "timing": "Optional timing <= 16 chars (e.g. '@ 10:45 AM' or '')",
+      "title": "UPPERCASE Course Name <= 26 chars (no numbers)",
+      "timing": "UPPERCASE timing <= 16 chars (e.g. '@ 10:45 AM'), or \"\"",
       "items": [
         {
-          "name": "Dish Name in Title Case <= 42 chars",
-          "note": "Optional accompaniments <= 44 chars (e.g. 'Raitha, Pickle' or '')"
+          "name": "Dish Name in Title Case <= 42 chars (no numbers/bullets)",
+          "note": "Accompaniments in Title Case <= 44 chars (e.g. 'Raitha, Pickle'), or \"\""
         }
       ]
     }
   ]
 }
 
-Rules:
-- Max 6 courses, max 12 items per course, max 22 total dishes.
-- Put side accompaniments (like Raitha, Pickle, Salad) in "note", not "name".
-- Leave any missing field as "" rather than guessing.
+### 4. RESPONSE WORKFLOW
+1. Output the ready-to-import \`\`\`json code block first.
+2. Right below the code block:
+   - Flag any dish count (> 80) or character-limit truncations if any occurred.
+   - Briefly ask if I want to add any optional **Footer Notes** (suggesting relevant options like GST terms, advance payment confirmation, extra pax/hour rates, or contact numbers) or fill in any missing event fields, and offer an updated JSON block if needed.
 
 Client Inquiry Details:
 [PASTE DETAILS HERE]`
@@ -197,11 +225,17 @@ const copyPrompt = async () => {
 
 const submitJson = (mode) => {
   parseError.value = ''
-  const cleaned = rawJson.value
-    .trim()
-    .replace(/^```(?:json)?\s*/i, '')
-    .replace(/\s*```$/, '')
-    .trim()
+  let cleaned = rawJson.value.trim()
+  const fencedMatch = cleaned.match(/```(?:json)?\s*([\s\S]*?)```/i)
+  if (fencedMatch) {
+    cleaned = fencedMatch[1].trim()
+  } else if (!cleaned.startsWith('[')) {
+    const firstBrace = cleaned.indexOf('{')
+    const lastBrace = cleaned.lastIndexOf('}')
+    if (firstBrace !== -1 && lastBrace > firstBrace) {
+      cleaned = cleaned.slice(firstBrace, lastBrace + 1)
+    }
+  }
 
   if (!cleaned) {
     parseError.value = 'Please paste JSON data before loading.'
@@ -214,6 +248,10 @@ const submitJson = (mode) => {
     if (!normalized || typeof normalized !== 'object') {
       throw new Error('Root JSON must be an object.')
     }
+    if (props.isDirty && !confirm('You have unsaved edits on this quotation. Replace with imported JSON?')) {
+      return
+    }
+    emit('load-json', { data: normalized, mode })
     emit('load-json', { data: normalized, mode })
     rawJson.value = ''
     emit('close')

@@ -1,22 +1,24 @@
 <!-- pages/quotation.vue -->
 <template>
-  <div class="px-3 sm:px-5 md:px-6 py-4 sm:py-5 min-h-[calc(100vh-93px)] lg:h-[calc(100vh-93px)] lg:min-h-0 flex flex-col gap-5">
+  <div class="px-2.5 sm:px-5 md:px-6 pt-0 pb-4 lg:py-5 min-h-[calc(100vh-93px)] lg:h-[calc(100vh-93px)] lg:min-h-0 flex flex-col gap-3.5 lg:gap-5">
     
-    <!-- Unified Studio Command Dock -->
-    <section class="bg-slate-900/80 border border-slate-800/90 rounded-2xl p-3.5 sm:p-4 backdrop-blur-md shrink-0 shadow-xl space-y-3 lg:space-y-0">
-      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3.5">
+    <!-- Sticky Mobile / Static Desktop Unified Studio Command Dock -->
+    <div class="sticky top-22 lg:static z-30 bg-[#030712] pt-2.5 pb-1.5 lg:py-0 shrink-0">
+      <section class="bg-slate-900/85 border border-slate-800/90 rounded-2xl p-2.5 sm:p-3.5 lg:p-4 backdrop-blur-md shadow-xl">
         
-        <!-- Left Cluster: Hub Return + Title + Reset (Mobile) -->
-        <div class="flex items-center justify-between lg:justify-start gap-3">
-          <div class="flex items-center gap-3">
+        <!-- Single-DOM Flex Engine (2 Compact Rows on Mobile • 1 Row on Desktop) -->
+        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
+          
+          <!-- 1. Hub Return + Title (Mobile: Row 1 Left | Desktop: Left Side) -->
+          <div class="order-1 mr-auto flex items-center gap-2.5 sm:gap-3">
             <NuxtLink 
               to="/" 
-              class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-[0.97] border border-slate-700/80 text-slate-200 text-xs font-bold uppercase tracking-wider transition-all"
+              class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-[0.97] border border-slate-700/80 text-slate-200 text-xs font-bold uppercase tracking-wider transition-all"
             >
-              <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+              <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
-              Hub
+              <span>Hub</span>
             </NuxtLink>
 
             <div class="hidden sm:flex flex-col">
@@ -29,155 +31,135 @@
             </div>
           </div>
 
-          <div class="flex lg:hidden items-center gap-1.5">
+          <!-- 2. Utility Cluster: Import + AI Guide + Reset (Mobile: Row 1 Right | Desktop: Right Side Leading) -->
+          <div class="order-2 flex items-center gap-1.5 sm:gap-2">
             <button
               type="button"
               @click="openJsonModal('import')"
-              class="px-2.5 py-2 rounded-xl bg-[#030712] hover:bg-slate-800 border border-slate-700/80 text-slate-200 text-xs font-semibold flex items-center gap-1 cursor-pointer"
+              class="inline-flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-2 lg:py-2.5 rounded-xl bg-[#030712] hover:bg-slate-800 active:scale-[0.97] border border-slate-700/80 text-slate-200 text-xs font-semibold transition-all cursor-pointer"
+              title="Import Quotation JSON"
             >
-              <svg class="w-3.5 h-3.5 text-[#0068fe]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#0068fe] shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
               <span>Import</span>
             </button>
+
             <button
               type="button"
               @click="openJsonModal('guide')"
               aria-label="AI Prompt Guide"
-              class="w-8.5 h-8.5 rounded-xl bg-[#030712] hover:bg-[#0068fe]/20 text-slate-300 hover:text-[#0068fe] border border-slate-700/80 font-serif italic font-bold text-xs flex items-center justify-center cursor-pointer"
+              title="AI Prompt Guide & JSON Schema"
+              class="w-8.5 h-8.5 lg:w-9.5 lg:h-9.5 rounded-xl bg-[#030712] hover:bg-[#0068fe]/20 active:scale-95 text-slate-300 hover:text-[#0068fe] border border-slate-700/80 hover:border-[#0068fe]/50 font-serif italic font-bold text-xs lg:text-sm inline-flex items-center justify-center transition-all cursor-pointer shrink-0"
             >
               i
             </button>
+
             <button
               type="button"
               @click="resetToSample"
-              class="px-2.5 py-2 rounded-xl bg-slate-800/70 hover:bg-slate-700 border border-slate-700/60 text-slate-300 text-xs font-semibold cursor-pointer"
+              class="inline-flex items-center justify-center px-2.5 sm:px-3.5 py-2 lg:py-2.5 rounded-xl bg-slate-800/70 hover:bg-slate-700 active:scale-[0.97] border border-slate-700/60 text-slate-300 text-xs font-semibold transition-all cursor-pointer"
+              title="Load sample quotation"
             >
               Reset
             </button>
           </div>
-        </div>
 
-        <!-- Right Cluster: Organized Export & Share Bar -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 lg:flex lg:items-center gap-2 sm:gap-2.5">
-          
-          <button
-            type="button"
-            @click="openJsonModal('import')"
-            class="hidden lg:inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-[#030712] hover:bg-slate-800 active:scale-[0.97] border border-slate-700/80 text-slate-200 text-xs font-semibold transition-all cursor-pointer"
-            title="Import Quotation JSON"
-          >
-            <svg class="w-4 h-4 text-[#0068fe] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-            </svg>
-            <span>Import</span>
-          </button>
+          <!-- 3. Mobile Force Row Break -->
+          <div class="order-3 w-full h-0 lg:hidden"></div>
 
-          <button
-            type="button"
-            @click="openJsonModal('guide')"
-            aria-label="AI Prompt Guide"
-            title="AI Prompt Guide & JSON Schema"
-            class="hidden lg:inline-flex w-9.5 h-9.5 rounded-xl bg-[#030712] hover:bg-[#0068fe]/20 text-slate-300 hover:text-[#0068fe] border border-slate-700/80 hover:border-[#0068fe]/50 font-serif italic font-bold text-sm items-center justify-center transition-colors cursor-pointer shrink-0"
-          >
-            i
-          </button>
-
-          <button
-            type="button"
-            @click="resetToSample"
-            class="hidden lg:inline-flex items-center justify-center px-3.5 py-2.5 rounded-xl bg-slate-800/70 hover:bg-slate-700 active:scale-[0.97] border border-slate-700/60 text-slate-300 text-xs font-semibold transition-all cursor-pointer"
-            title="Load sample quotation"
-          >
-            Reset
-          </button>
-
-          <!-- Download JPG -->
+          <!-- 4. Download JPG (Mobile: Row 2 Flex Pill | Desktop: Right Cluster) -->
           <button
             type="button"
             :disabled="isExporting"
             @click="downloadJpg"
-            class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-[0.97] border border-slate-700 text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
+            class="order-4 flex-1 lg:flex-none inline-flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-2 lg:py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-[0.97] border border-slate-700 text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
+            title="Download JPG"
           >
-            <svg class="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             <span>JPG</span>
           </button>
 
-          <!-- Download PDF -->
+          <!-- 5. Download PDF -->
           <button
             type="button"
             :disabled="isExporting"
             @click="downloadPdf"
-            class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-[0.97] text-slate-950 text-xs font-extrabold uppercase tracking-wider shadow-lg shadow-amber-500/15 transition-all cursor-pointer disabled:opacity-50"
+            class="order-5 flex-1 lg:flex-none inline-flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-2 lg:py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-[0.97] text-slate-950 text-xs font-extrabold uppercase tracking-wider shadow-lg shadow-amber-500/15 transition-all cursor-pointer disabled:opacity-50"
+            title="Download A4 PDF"
           >
-            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <span>PDF</span>
           </button>
 
-          <!-- Native OS Share (with format toggle) -->
-          <div class="inline-flex items-center justify-between rounded-xl bg-[#0068fe] p-0.5 shadow-lg shadow-[#0068fe]/20">
+          <!-- 6. Native OS Share (Icon + Format Pill on Mobile | Icon + 'Share' + Format Pill on Desktop) -->
+          <div class="order-6 flex-[1.15] sm:flex-1 lg:flex-none inline-flex items-center justify-between rounded-xl bg-[#0068fe] p-0.5 shadow-lg shadow-[#0068fe]/20">
             <button
               type="button"
               :disabled="isExporting"
               @click="shareNativeFile"
-              class="grow inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 active:scale-[0.97] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
+              aria-label="Share Quotation File"
+              class="grow inline-flex items-center justify-center gap-1.5 px-2 sm:px-3 py-1.5 lg:py-2 rounded-lg hover:bg-white/10 active:scale-[0.97] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
             >
               <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
               </svg>
-              <span>Share</span>
+              <span class="hidden sm:inline">Share</span>
             </button>
             <button
               type="button"
               @click="shareFormat = shareFormat === 'pdf' ? 'jpg' : 'pdf'"
-              class="px-2 py-2 rounded-lg bg-slate-950/35 hover:bg-slate-950/55 text-[10px] font-extrabold uppercase tracking-wider text-blue-100 transition-colors cursor-pointer shrink-0"
+              class="px-2 py-1.5 lg:py-2 rounded-lg bg-slate-950/35 hover:bg-slate-950/55 text-[10px] font-extrabold uppercase tracking-wider text-blue-100 transition-colors cursor-pointer shrink-0"
               title="Switch Native Share format between PDF and JPG"
             >
               {{ shareFormat }}
             </button>
           </div>
 
-          <!-- WhatsApp Direct Share -->
+          <!-- 7. WhatsApp Direct Share -->
           <button
             type="button"
             @click="shareWhatsApp"
-            class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-[0.97] text-white text-xs font-bold uppercase tracking-wider shadow-lg shadow-emerald-600/20 transition-all cursor-pointer"
+            aria-label="Send Text Summary via WhatsApp"
+            class="order-7 flex-1 lg:flex-none inline-flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-2 lg:py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-[0.97] text-white text-xs font-bold uppercase tracking-wider shadow-lg shadow-emerald-600/20 transition-all cursor-pointer"
           >
-            <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.766.469 3.484 1.344 5.016L2 22l5.156-1.359c1.484.813 3.156 1.234 4.875 1.234 5.516 0 9.969-4.453 9.969-9.969S17.547 2 12.031 2zm5.828 14.125c-.25.703-1.438 1.344-2 1.422-.531.078-1.203.109-1.953-.125-.453-.141-1.047-.344-1.797-.672-3.156-1.359-5.219-4.547-5.375-4.766-.156-.203-1.281-1.703-1.281-3.25s.813-2.313 1.094-2.625c.297-.313.641-.391.859-.391.219 0 .422.016.609.016.188 0 .453-.078.703.531.266.625.891 2.172.969 2.328.078.156.125.344.031.547-.109.219-.156.344-.313.531-.156.188-.328.406-.469.547-.156.156-.328.328-.141.641.188.313.828 1.375 1.781 2.219 1.219 1.094 2.25 1.438 2.578 1.594.313.156.5.125.688-.078.188-.219.797-.922 1.016-1.234.203-.313.422-.266.703-.156.297.109 1.875.891 2.188 1.047.328.156.531.234.609.375.078.141.078.797-.172 1.5z"/>
             </svg>
-            <span>WhatsApp</span>
+            <span class="sm:hidden">WA</span>
+            <span class="hidden sm:inline">WhatsApp</span>
           </button>
 
         </div>
-      </div>
 
-      <!-- Integrated Compact Mobile Mode Switcher (Merged Inside Dock) -->
-      <div class="lg:hidden pt-3 border-t border-slate-800/80">
-        <div class="grid grid-cols-2 gap-1.5 p-1 rounded-xl bg-[#030712] border border-slate-800/90">
-          <button
-            type="button"
-            @click="mobileTab = 'editor'"
-            :class="mobileTab === 'editor' ? 'bg-amber-500 text-slate-950 font-extrabold shadow-sm' : 'text-slate-400 hover:text-slate-200 font-semibold'"
-            class="py-2 rounded-lg text-xs uppercase tracking-wider transition-all cursor-pointer"
-          >
-            Edit Details ({{ totalItemsCount }})
-          </button>
-          <button
-            type="button"
-            @click="mobileTab = 'preview'"
-            :class="mobileTab === 'preview' ? 'bg-amber-500 text-slate-950 font-extrabold shadow-sm' : 'text-slate-400 hover:text-slate-200 font-semibold'"
-            class="py-2 rounded-lg text-xs uppercase tracking-wider transition-all cursor-pointer"
-          >
-            Live A4 Sheet
-          </button>
+        <!-- Integrated 50/50 Mobile Mode Switcher -->
+        <div class="lg:hidden mt-2 pt-2 border-t border-slate-800/80">
+          <div class="grid grid-cols-2 gap-1.5 p-1 rounded-xl bg-[#030712] border border-slate-800/90">
+            <button
+              type="button"
+              @click="mobileTab = 'editor'"
+              :class="mobileTab === 'editor' ? 'bg-amber-500 text-slate-950 font-extrabold shadow-sm' : 'text-slate-400 hover:text-slate-200 font-semibold'"
+              class="py-1.5 rounded-lg text-xs uppercase tracking-wider transition-all cursor-pointer"
+            >
+              Edit Details ({{ totalItemsCount }})
+            </button>
+            <button
+              type="button"
+              @click="mobileTab = 'preview'"
+              :class="mobileTab === 'preview' ? 'bg-amber-500 text-slate-950 font-extrabold shadow-sm' : 'text-slate-400 hover:text-slate-200 font-semibold'"
+              class="py-1.5 rounded-lg text-xs uppercase tracking-wider transition-all cursor-pointer"
+            >
+              Live A4 Sheet
+            </button>
+          </div>
         </div>
-      </div>
-    </section>
+
+      </section>
+    </div>
 
     <!-- Split Studio Workspace (min-h-0 enables independent vertical scrolling on both panes) -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 grow lg:min-h-0">
@@ -362,8 +344,8 @@
             />
           </div>
 
-          <!-- Service Menu Title + Optional Footer Note -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+          <!-- Service Menu Title + 3-Line Centered Optional Notes -->
+          <div class="space-y-4 pt-1">
             <div>
               <div class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
                 <label for="q-service-heading">Service Menu Title (Uppercase)</label>
@@ -382,22 +364,31 @@
               />
             </div>
 
-            <div>
-              <div class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
-                <label for="q-footer-note">Optional Note (Capitalized)</label>
-                <span>{{ form.footerNote.length }}/{{ LIMITS.footerNote }}</span>
+            <div class="bg-[#030712]/50 border border-slate-800/80 rounded-xl p-3.5 sm:p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400">
+                  Optional Bottom Notes ({{ isTwoColumnLayout ? 'Centered' : 'Left-Aligned' }} • Up to 3 Lines)
+                </span>
+                <span class="text-[10px] font-semibold text-slate-500">Auto-Capitalize</span>
               </div>
-              <input
-                id="q-footer-note"
-                name="footerNote"
-                type="text"
-                autocomplete="off"
-                :maxlength="LIMITS.footerNote"
-                :value="form.footerNote"
-                @input="onCapitalizeInput(form, 'footerNote', $event)"
-                placeholder="Contact Us : 9633817064"
-                class="w-full bg-[#030712] border border-slate-800 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-white capitalize placeholder:text-slate-600 focus:outline-none transition-colors"
-              />
+
+              <div v-for="(_, nIdx) in 3" :key="'footer-note-' + nIdx">
+                <div class="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                  <label :for="'q-footer-note-' + nIdx">Note Line #{{ nIdx + 1 }}</label>
+                  <span>{{ form.footerNotes[nIdx].length }}/{{ LIMITS.footerNote }}</span>
+                </div>
+                <input
+                  :id="'q-footer-note-' + nIdx"
+                  :name="'footerNote_' + nIdx"
+                  type="text"
+                  autocomplete="off"
+                  :maxlength="LIMITS.footerNote"
+                  :value="form.footerNotes[nIdx]"
+                  @input="onFooterNoteInput(nIdx, $event)"
+                  :placeholder="nIdx === 0 ? 'Contact Us : 9633817064' : 'Optional additional note line...'"
+                  class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-lg px-3.5 py-2.5 text-sm text-white capitalize placeholder:text-slate-600 focus:outline-none transition-colors"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -616,18 +607,26 @@
           </div>
         </div>
 
-        <!-- Dedicated Vertical Scroll Viewport -->
-        <div class="grow min-h-0 overflow-y-auto custom-scrollbar p-4 sm:p-6">
-          <div 
+        <!-- Dedicated Vertical Scroll Viewport (Supports 1 or Multi-Page A4 Stack) -->
+        <div class="grow min-h-0 overflow-y-auto custom-scrollbar p-4 sm:p-6 space-y-6">
+          <div
+            v-for="pageNum in pageCount"
+            :key="'a4-sheet-' + pageNum"
             :class="previewZoom === 'scroll' ? 'w-full max-w-170' : 'w-full max-w-100'"
-            class="mx-auto aspect-1654/2339 shadow-[0_24px_60px_rgba(0,0,0,0.7)] rounded-sm overflow-hidden bg-white ring-1 ring-white/15 transition-all duration-200"
+            class="mx-auto transition-all duration-200"
           >
-            <canvas 
-              ref="a4CanvasRef" 
-              width="1654" 
-              height="2339" 
-              class="w-full h-full block"
-            ></canvas>
+            <div v-if="pageCount > 1" class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 px-1">
+              <span>Sheet {{ pageNum }} of {{ pageCount }}</span>
+              <span>ISO A4 • 200 DPI</span>
+            </div>
+            <div class="aspect-1654/2339 shadow-[0_24px_60px_rgba(0,0,0,0.7)] rounded-sm overflow-hidden bg-white ring-1 ring-white/15">
+              <canvas
+                :ref="(el) => setPageCanvasRef(el, pageNum - 1)"
+                width="1654"
+                height="2339"
+                class="w-full h-full block"
+              ></canvas>
+            </div>
           </div>
         </div>
       </aside>
@@ -637,6 +636,7 @@
     <QuotationJsonModal
       :is-open="isJsonModalOpen"
       :initial-tab="jsonModalTab"
+      :is-dirty="isDirty"
       @close="isJsonModalOpen = false"
       @load-json="handleQuotationJsonLoaded"
     />
@@ -645,13 +645,15 @@
 
 <script setup>
 import { reactive, ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 
 // -- 1. CONSTANTS & CHARACTER LIMITS --
 const CANVAS_W = 1654
 const CANVAS_H = 2339
-const MAX_COURSES = 6
-const MAX_ITEMS_PER_COURSE = 12
-const MAX_TOTAL_ITEMS = 22
+const MAX_COURSES = 12
+const MAX_ITEMS_PER_COURSE = 28
+const MAX_TOTAL_ITEMS = 80
+const COURSE_UNBREAKABLE_MAX = 15
 
 const LIMITS = {
   refNo: 24,
@@ -667,17 +669,25 @@ const LIMITS = {
   courseTiming: 16,
   itemName: 42,
   itemNote: 44,
-  footerNote: 64
+  footerNote: 85
 }
 
-// -- 2. STATE & CASE FORMATTERS --
+// -- 2. STATE, CASE FORMATTERS & UNSAVED CHANGES GUARD --
 const mobileTab = ref('editor')
 const previewZoom = ref('scroll')
 const shareFormat = ref('pdf')
 const isExporting = ref(false)
-const a4CanvasRef = ref(null)
+const pageCount = ref(1)
+const isTwoColumnLayout = ref(false)
+const isDirty = ref(false)
+let isSuppressingDirty = false
+
+const pageCanvasRefs = []
+const setPageCanvasRef = (el, idx) => {
+  if (el) pageCanvasRefs[idx] = el
+}
+
 const priceInputRef = ref(null)
-const currentScaleFactor = ref(1)
 
 const makeId = () => Math.random().toString(36).slice(2, 10)
 
@@ -694,10 +704,10 @@ const createSampleState = () => ({
   clientPhone: '9400653709',
   guaranteedPax: 'PAX : 100',
   dateTime: '01/01/2027 • 11:00 AM TO 02:00 PM',
-  venueProgram: 'CAPS BANQUET HALL - BIRTHDAY FUNCTION',
+  venueProgram: 'CAPS EVENT HALL - BIRTHDAY FUNCTION',
   priceDetails: '₹300/- PAX + ₹1000/HOUR AC & ELECTRICAL CHARGES',
   serviceHeading: 'BUFFET SERVICE MENU',
-  footerNote: 'Contact Us : 9633817064',
+  footerNotes: ['Contact Us : 9633817064', '', ''],
   courses: [
     {
       id: makeId(),
@@ -756,6 +766,12 @@ const onCapitalizeInput = (target, key, e) => {
   e.target.value = formatted
 }
 
+const onFooterNoteInput = (idx, e) => {
+  const formatted = toCapitalizeClean(e.target.value, LIMITS.footerNote)
+  form.footerNotes[idx] = formatted
+  e.target.value = formatted
+}
+
 const insertRupeeSymbol = async () => {
   if (form.priceDetails.length >= LIMITS.priceDetails) return
   form.priceDetails = toUpperClean(form.priceDetails ? form.priceDetails + ' ₹' : '₹', LIMITS.priceDetails)
@@ -767,9 +783,11 @@ const totalItemsCount = computed(() =>
   form.courses.reduce((sum, c) => sum + c.items.length, 0)
 )
 
-const scaleBadgeText = computed(() =>
-  currentScaleFactor.value >= 0.96 ? 'A4 Fit: Optimal' : `Auto-Scale: ${Math.round(currentScaleFactor.value * 100)}%`
-)
+const scaleBadgeText = computed(() => {
+  const colText = isTwoColumnLayout.value ? '2 Cols' : '1 Col'
+  const pgText = `${pageCount.value} ${pageCount.value === 1 ? 'Page' : 'Pages'}`
+  return `${colText} • ${pgText}${isDirty.value ? ' • Unsaved' : ''}`
+})
 
 const addCourse = () => {
   if (form.courses.length >= MAX_COURSES) return
@@ -802,8 +820,15 @@ const moveItem = (course, from, to) => {
   course.items.splice(to, 0, moved)
 }
 
-const resetToSample = () => {
+const resetToSample = async () => {
+  if (isDirty.value && !confirm('Discard unsaved quotation changes and reset to sample?')) {
+    return
+  }
+  isSuppressingDirty = true
   Object.assign(form, createSampleState())
+  await nextTick()
+  isDirty.value = false
+  isSuppressingDirty = false
 }
 
 const isJsonModalOpen = ref(false)
@@ -825,7 +850,12 @@ const handleQuotationJsonLoaded = ({ data, mode }) => {
     if (data.venueProgram !== undefined) form.venueProgram = toUpperClean(data.venueProgram, LIMITS.venueProgram)
     if (data.priceDetails !== undefined) form.priceDetails = toUpperClean(data.priceDetails, LIMITS.priceDetails)
     if (data.serviceHeading) form.serviceHeading = toUpperClean(data.serviceHeading, LIMITS.serviceHeading)
-    if (data.footerNote !== undefined) form.footerNote = toCapitalizeClean(data.footerNote, LIMITS.footerNote)
+
+    if (Array.isArray(data.footerNotes)) {
+      form.footerNotes = [0, 1, 2].map((i) => toCapitalizeClean(data.footerNotes[i] || '', LIMITS.footerNote))
+    } else if (data.footerNote !== undefined) {
+      form.footerNotes = [toCapitalizeClean(data.footerNote, LIMITS.footerNote), '', '']
+    }
   }
 
   if (Array.isArray(data.courses) && data.courses.length > 0) {
@@ -855,7 +885,22 @@ const handleQuotationJsonLoaded = ({ data, mode }) => {
       form.courses = cleanCourses
     }
   }
-}   
+
+  isDirty.value = true
+}
+
+const handleBeforeUnload = (e) => {
+  if (isDirty.value) {
+    e.preventDefault()
+    e.returnValue = ''
+  }
+}
+
+onBeforeRouteLeave(() => {
+  if (isDirty.value) {
+    return confirm('You have unsaved changes to this quotation. Leave anyway and discard changes?')
+  }
+})
 
 // -- 3. CANVAS VECTOR ICONS & TYPOGRAPHY HELPERS --
 let logoImage = null
@@ -1034,8 +1079,7 @@ const drawInstagramIcon = (ctx, cx, cy, size, color) => {
 }
 
 // -- 4. MASTER A4 CANVAS RENDER ENGINE (EXECUTIVE LETTERHEAD EDITION) --
-const renderQuotationCanvas = () => {
-  const canvas = a4CanvasRef.value
+const renderSinglePageCanvas = (canvas, pageSlice, pageIdx, totalPages, isTwoColumnGlobal) => {
   if (!canvas) return
   const ctx = canvas.getContext('2d')
   const W = CANVAS_W
@@ -1239,146 +1283,128 @@ const renderQuotationCanvas = () => {
   ctx.roundRect(cardX, cardY, cardW, totalCardH, 16)
   ctx.stroke()
 
-  // -- SECTION D: SPACIOUS EDITORIAL BANQUET MENU --
+  // -- SECTION D: 1-TO-2 COLUMN NUMBERED BANQUET MENU & CENTERED 3-LINE NOTES --
   const FOOTER_TOP_Y = 1924
-  const menuStartY = cardY + totalCardH + 54
-  const menuMaxBottomY = FOOTER_TOP_Y - 40
-  const availableMenuH = menuMaxBottomY - menuStartY
+  const activeNotes = form.footerNotes.map((n) => n.trim()).filter(Boolean)
+  const notesReservedH = activeNotes.length > 0 ? 24 + activeNotes.length * 30 + 24 : 0
+  const menuStartY = cardY + totalCardH + 46
+  const menuMaxBottomY = FOOTER_TOP_Y - 26 - notesReservedH
+  const scale = pageSlice.scale || 1
 
-  const activeCourses = form.courses
-    .map((c) => ({
-      title: c.title.trim(),
-      timing: c.timing.trim(),
-      items: c.items.filter((it) => it.name.trim())
-    }))
-    .filter((c) => c.title || c.items.length)
+  let colTopY = menuStartY
+  const headingStr = form.serviceHeading.trim()
 
-  const measureMenuHeight = (scale) => {
-    let h = form.serviceHeading.trim() ? 72 * scale : 0
-    activeCourses.forEach((c) => {
-      h += 54 * scale
-      c.items.forEach((it) => {
-        h += 42 * scale
-        if (it.note.trim()) h += 29 * scale
-      })
-      h += 22 * scale
-    })
-    if (form.footerNote.trim()) h += 52 * scale
-    return h
-  }
+  // 1. Service Menu Title Banner (Left on 1-Col; Globally Centered on 2-Col / Multi-Page)
+  if (headingStr || totalPages > 1) {
+    const headingSize = 30
+    const lineY = menuStartY + headingSize + 13
 
-  const rawMenuH = measureMenuHeight(1)
-  const scale = rawMenuH > availableMenuH ? Math.max(0.68, availableMenuH / rawMenuH) : 1
-  currentScaleFactor.value = scale
-
-  let curY = menuStartY
-  const menuX = marginX + 12
-
-  // Service Menu Title Banner
-  if (form.serviceHeading.trim()) {
-    const headingSize = Math.round(31 * scale)
-    ctx.font = `700 ${headingSize}px "Faculty Glyphic", serif`
-    ctx.fillStyle = '#0F172A'
-    ctx.textBaseline = 'alphabetic'
-    const hWidth = drawTrackedText(ctx, form.serviceHeading.trim(), menuX, curY + headingSize, 2.5, 'left')
-
-    // Dual-tier underline (Amber highlight + subtle full-width rule)
-    const lineY = curY + headingSize + 12
-    ctx.strokeStyle = '#F1F5F9'
+    ctx.strokeStyle = '#E2E8F0'
     ctx.lineWidth = 2
     ctx.beginPath()
-    ctx.moveTo(menuX, lineY)
-    ctx.lineTo(rightEdge - 12, lineY)
+    ctx.moveTo(marginX + 8, lineY)
+    ctx.lineTo(rightEdge - 8, lineY)
+    ctx.stroke()
+
+    if (headingStr) {
+      ctx.font = `700 ${headingSize}px "Faculty Glyphic", serif`
+      ctx.fillStyle = '#0F172A'
+      ctx.textBaseline = 'alphabetic'
+
+      if (isTwoColumnGlobal) {
+        const hWidth = drawTrackedText(ctx, headingStr, W / 2, menuStartY + headingSize, 2.8, 'center')
+        const barW = Math.min(hWidth + 44, 620)
+        ctx.fillStyle = '#EA8C1E'
+        ctx.fillRect(W / 2 - barW / 2, lineY - 1.5, barW, 3.8)
+      } else {
+        const hWidth = drawTrackedText(ctx, headingStr, marginX + 12, menuStartY + headingSize, 2.5, 'left')
+        ctx.fillStyle = '#EA8C1E'
+        ctx.fillRect(marginX + 12, lineY - 1.5, Math.min(hWidth + 24, 580), 3.8)
+      }
+    }
+
+    // Subtle Page X of Y Badge on Service Menu Header Right (Only when > 1 Page)
+    if (totalPages > 1) {
+      const badgeLabel = `PAGE ${pageIdx + 1} OF ${totalPages}`
+      ctx.font = '700 16px "Inter", sans-serif'
+      const bTextW = ctx.measureText(badgeLabel).width
+      const bPadX = 14
+      const bW = bTextW + bPadX * 2
+      const bH = 28
+      const bX = rightEdge - 10 - bW
+      const bY = lineY - bH - 8
+
+      ctx.fillStyle = '#FFF7ED'
+      ctx.strokeStyle = '#FDBA74'
+      ctx.lineWidth = 1.4
+      ctx.beginPath()
+      ctx.roundRect(bX, bY, bW, bH, 14)
+      ctx.fill()
+      ctx.stroke()
+
+      ctx.fillStyle = '#B45309'
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.fillText(badgeLabel, bX + bW / 2, bY + bH / 2 + 1)
+      ctx.textBaseline = 'alphabetic'
+    }
+
+    colTopY = menuStartY + 68
+  }
+
+  // 2. Render Column Slices (Numbered Courses & Numbered Dishes)
+  const col1X = isTwoColumnGlobal ? marginX + 8 : marginX + 12
+  const colW = isTwoColumnGlobal ? W / 2 - marginX - 40 : rightEdge - marginX - 24
+  const col2X = W / 2 + 32
+
+  const col1EndY = drawMenuColumnSlices(ctx, pageSlice.col1, col1X, colTopY, colW, scale)
+  let col2EndY = colTopY
+
+  if (isTwoColumnGlobal && pageSlice.col2.length > 0) {
+    col2EndY = drawMenuColumnSlices(ctx, pageSlice.col2, col2X, colTopY, colW, scale)
+
+    // Delicate Center Column Divider
+    ctx.strokeStyle = '#E2E8F0'
+    ctx.lineWidth = 1.6
+    ctx.beginPath()
+    ctx.moveTo(W / 2, colTopY + 4)
+    ctx.lineTo(W / 2, Math.min(Math.max(col1EndY, col2EndY) - 6, menuMaxBottomY))
+    ctx.stroke()
+  }
+
+  // 3. Adaptive 3-Line Bottom Notes (Left on 1-Col Single Page; Centered on 2-Col / Multi-Page)
+  if (activeNotes.length > 0) {
+    const notesBlockTopY = FOOTER_TOP_Y - 24 - activeNotes.length * 30 - 16
+    const maxNoteW = rightEdge - marginX - 24
+
+    ctx.strokeStyle = '#F6C58E'
+    ctx.lineWidth = 1.5
+    ctx.beginPath()
+    if (isTwoColumnGlobal) {
+      ctx.moveTo(W / 2 - 120, notesBlockTopY)
+      ctx.lineTo(W / 2 + 120, notesBlockTopY)
+    } else {
+      ctx.moveTo(marginX + 12, notesBlockTopY)
+      ctx.lineTo(marginX + 252, notesBlockTopY)
+    }
     ctx.stroke()
 
     ctx.fillStyle = '#EA8C1E'
-    ctx.fillRect(menuX, lineY - 1.5, Math.min(hWidth + 24, 580), 3.8)
-    curY += Math.round(72 * scale)
-  }
-
-  // Courses & Dishes
-  activeCourses.forEach((course) => {
-    const courseFontSize = Math.round(25 * scale)
-    if (course.title) {
-      ctx.font = `600 ${courseFontSize}px "Faculty Glyphic", serif`
-      ctx.fillStyle = '#0F172A'
-      ctx.textAlign = 'left'
-      ctx.textBaseline = 'alphabetic'
-      ctx.fillText(course.title, menuX, curY + courseFontSize)
-      const cWidth = ctx.measureText(course.title).width
-
-      // Warm Amber Timing Pill Badge (e.g., @ 10:45 AM)
-      if (course.timing) {
-        const pillFont = Math.round(17 * scale)
-        ctx.font = `700 ${pillFont}px "Inter", sans-serif`
-        const tWidth = ctx.measureText(course.timing).width
-        const pillX = menuX + cWidth + 18
-        const pillH = Math.round(28 * scale)
-        const pillY = curY + courseFontSize - pillH + 5
-
-        ctx.fillStyle = '#FFF7ED'
-        ctx.strokeStyle = '#FDBA74'
-        ctx.lineWidth = 1.4
-        ctx.beginPath()
-        ctx.roundRect(pillX, pillY, tWidth + 24, pillH, pillH / 2)
-        ctx.fill()
-        ctx.stroke()
-
-        ctx.fillStyle = '#C2410C'
-        ctx.textBaseline = 'middle'
-        ctx.fillText(course.timing, pillX + 12, pillY + pillH / 2 + 1)
-        ctx.textBaseline = 'alphabetic'
-      }
-
-      ctx.fillStyle = '#F59E0B'
-      ctx.fillRect(menuX, curY + courseFontSize + 8, cWidth, 2.5)
-      curY += Math.round(52 * scale)
+    if (isTwoColumnGlobal) {
+      ctx.fillRect(W / 2 - 22, notesBlockTopY - 1.5, 44, 3)
+    } else {
+      ctx.fillRect(marginX + 12, notesBlockTopY - 1.5, 44, 3)
     }
 
-    course.items.forEach((item) => {
-      const itemFontSize = Math.round(23.5 * scale)
-      const maxItemW = rightEdge - menuX - 80
-
-      // Amber Star Marker
-      ctx.font = `700 ${Math.round(19.5 * scale)}px "Inter", sans-serif`
-      ctx.fillStyle = '#EA8C1E'
-      ctx.textAlign = 'left'
-      ctx.textBaseline = 'alphabetic'
-      ctx.fillText('★', menuX + 16, curY + itemFontSize - 1)
-
-      // Capitalized Dish Name
-      ctx.font = `600 ${itemFontSize}px "Inter", sans-serif`
-      ctx.fillStyle = '#1E293B'
-      const dishLines = wrapTextLines(ctx, item.name.trim(), maxItemW)
-      dishLines.forEach((line, lIdx) => {
-        ctx.fillText(line, menuX + 50, curY + itemFontSize + lIdx * Math.round(30 * scale))
-      })
-      curY += Math.round(40 * scale) + (dishLines.length - 1) * Math.round(30 * scale)
-
-      // Optional Accompaniment Sub-note
-      if (item.note.trim()) {
-        const noteSize = Math.round(19 * scale)
-        ctx.font = `500 ${noteSize}px "Inter", sans-serif`
-        ctx.fillStyle = '#64748B'
-        ctx.fillText(item.note.trim(), menuX + 50, curY + noteSize - 4)
-        curY += Math.round(28 * scale)
-      }
-    })
-
-    curY += Math.round(20 * scale)
-  })
-
-  // Optional Footer Note Callout
-  if (form.footerNote.trim()) {
-    const noteY = Math.min(curY + 12, menuMaxBottomY - 36)
-    const noteFontSize = Math.round(21 * scale)
-    ctx.fillStyle = '#EA8C1E'
-    ctx.fillRect(menuX, noteY, 4.5, Math.round(28 * scale))
-    ctx.font = `600 ${noteFontSize}px "Inter", sans-serif`
+    ctx.font = '600 20.5px "Inter", sans-serif'
     ctx.fillStyle = '#0F172A'
-    ctx.textAlign = 'left'
+    ctx.textAlign = isTwoColumnGlobal ? 'center' : 'left'
     ctx.textBaseline = 'alphabetic'
-    ctx.fillText(form.footerNote.trim(), menuX + 18, noteY + noteFontSize + 1)
+
+    const noteAnchorX = isTwoColumnGlobal ? W / 2 : marginX + 12
+    activeNotes.forEach((noteLine, idx) => {
+      ctx.fillText(noteLine, noteAnchorX, notesBlockTopY + 30 + idx * 30, maxNoteW)
+    })
   }
 
   // -- SECTION E: STATIONERY FOOTER --
@@ -1514,18 +1540,427 @@ const renderQuotationCanvas = () => {
   drawInstagramIcon(ctx, igCenterX, bottomY - 8, igSize, '#0F172A')
 }
 
+// -- PIXEL-ACCURATE 2-COLUMN & MULTI-PAGE LAYOUT CALCULATOR --
+let scratchCanvas = null
+const getMeasureCtx = () => {
+  if (!scratchCanvas) {
+    scratchCanvas = document.createElement('canvas')
+    scratchCanvas.width = 10
+    scratchCanvas.height = 10
+  }
+  return scratchCanvas.getContext('2d')
+}
+
+const measureSummaryCardBottomY = (ctx) => {
+  const cardW = CANVAS_W - 176
+  const valMaxW = cardW - 436 - 60
+  const rawPax = form.guaranteedPax.trim()
+  const paxFormatted = rawPax ? (rawPax.includes('PAX') ? rawPax : `PAX : ${rawPax}`) : ''
+  const orderRowVal = [form.clientName.trim(), form.clientPhone.trim(), paxFormatted].filter(Boolean).join('   •   ') || '—'
+
+  ctx.font = '600 22.5px "Inter", sans-serif'
+  const rows = [
+    wrapTextLines(ctx, orderRowVal, valMaxW).slice(0, 2),
+    wrapTextLines(ctx, form.dateTime.trim() || '—', valMaxW).slice(0, 2),
+    wrapTextLines(ctx, form.venueProgram.trim() || '—', valMaxW).slice(0, 2),
+    wrapTextLines(ctx, form.priceDetails.trim() || '—', valMaxW).slice(0, 2)
+  ]
+  const totalCardH = rows.reduce((sum, lines) => sum + (lines.length > 1 ? 90 : 66), 0)
+  return 514 + totalCardH
+}
+
+const measureCourseHeaderH = (ctx, slice, colW, scale) => {
+  const headerLabel = `${slice.courseNumber}. ${slice.title || 'COURSE'}`
+  const courseFontSize = Math.round(24 * scale)
+  ctx.font = `600 ${courseFontSize}px "Faculty Glyphic", serif`
+  const cWidth = ctx.measureText(headerLabel).width
+
+  if (!slice.timing) return { h: Math.round(50 * scale), timingInline: true, cWidth }
+
+  const pillFont = Math.round(16.5 * scale)
+  ctx.font = `700 ${pillFont}px "Inter", sans-serif`
+  const pillW = ctx.measureText(slice.timing).width + Math.round(24 * scale)
+  const timingInline = cWidth + Math.round(16 * scale) + pillW <= colW
+  return {
+    h: timingInline ? Math.round(50 * scale) : Math.round(82 * scale),
+    timingInline,
+    cWidth
+  }
+}
+
+const measureDishItemH = (ctx, item, colW, scale) => {
+  const dishIndentX = Math.round(48 * scale)
+  const maxItemW = colW - dishIndentX - 8
+  const itemFontSize = Math.round(22.5 * scale)
+  const lineStep = Math.round(29 * scale)
+
+  ctx.font = `600 ${itemFontSize}px "Inter", sans-serif`
+  const dishLines = wrapTextLines(ctx, item.name, maxItemW)
+  let h = Math.round(38 * scale) + Math.max(0, dishLines.length - 1) * lineStep
+
+  if (item.note) {
+    const noteSize = Math.round(18.5 * scale)
+    ctx.font = `500 ${noteSize}px "Inter", sans-serif`
+    const noteLines = wrapTextLines(ctx, item.note, maxItemW)
+    h += Math.round(26 * scale) + Math.max(0, noteLines.length - 1) * Math.round(23 * scale)
+  }
+  return h
+}
+
+const measureSliceTotalH = (ctx, slice, colW, scale) => {
+  let h = measureCourseHeaderH(ctx, slice, colW, scale).h
+  for (const item of slice.items) {
+    h += measureDishItemH(ctx, item, colW, scale)
+  }
+  return h + Math.round(18 * scale)
+}
+
+const drawMenuColumnSlices = (ctx, slices, colX, startY, colW, scale) => {
+  let curY = startY
+  const dishIndentX = Math.round(48 * scale)
+  const maxItemW = colW - dishIndentX - 8
+
+  slices.forEach((slice) => {
+    const headerLabel = `${slice.courseNumber}. ${slice.title || 'COURSE'}`
+    const courseFontSize = Math.round(24 * scale)
+    const { timingInline } = measureCourseHeaderH(ctx, slice, colW, scale)
+
+    ctx.font = `600 ${courseFontSize}px "Faculty Glyphic", serif`
+    ctx.fillStyle = '#0F172A'
+    ctx.textAlign = 'left'
+    ctx.textBaseline = 'alphabetic'
+    ctx.fillText(headerLabel, colX, curY + courseFontSize)
+    const cWidth = ctx.measureText(headerLabel).width
+
+    ctx.fillStyle = '#F59E0B'
+    ctx.fillRect(colX, curY + courseFontSize + 7, Math.min(cWidth, colW), 2.5)
+
+    if (slice.timing) {
+      const pillFont = Math.round(16.5 * scale)
+      ctx.font = `700 ${pillFont}px "Inter", sans-serif`
+      const tWidth = ctx.measureText(slice.timing).width
+      const pillPadX = Math.round(12 * scale)
+      const pillW = tWidth + pillPadX * 2
+      const pillH = Math.round(27 * scale)
+      const pillX = timingInline ? colX + cWidth + Math.round(16 * scale) : colX
+      const pillY = timingInline ? curY + courseFontSize - pillH + 5 : curY + courseFontSize + 15
+
+      ctx.fillStyle = '#FFF7ED'
+      ctx.strokeStyle = '#FDBA74'
+      ctx.lineWidth = 1.4
+      ctx.beginPath()
+      ctx.roundRect(pillX, pillY, pillW, pillH, pillH / 2)
+      ctx.fill()
+      ctx.stroke()
+
+      ctx.fillStyle = '#C2410C'
+      ctx.textBaseline = 'middle'
+      ctx.fillText(slice.timing, pillX + pillPadX, pillY + pillH / 2 + 1)
+      ctx.textBaseline = 'alphabetic'
+    }
+
+    curY += timingInline ? Math.round(50 * scale) : Math.round(82 * scale)
+
+    slice.items.forEach((item) => {
+      const itemFontSize = Math.round(22.5 * scale)
+      const lineStep = Math.round(29 * scale)
+
+      // Numbered Dish Prefix (1., 2., ... continuing cleanly across split columns)
+      ctx.font = `700 ${Math.round(20 * scale)}px "Inter", sans-serif`
+      ctx.fillStyle = '#EA8C1E'
+      ctx.textAlign = 'left'
+      ctx.textBaseline = 'alphabetic'
+      ctx.fillText(`${item.dishNumber}.`, colX + 6, curY + itemFontSize - 1)
+
+      // Capitalized Dish Name
+      ctx.font = `600 ${itemFontSize}px "Inter", sans-serif`
+      ctx.fillStyle = '#1E293B'
+      const dishLines = wrapTextLines(ctx, item.name, maxItemW)
+      dishLines.forEach((line, lIdx) => {
+        ctx.fillText(line, colX + dishIndentX, curY + itemFontSize + lIdx * lineStep)
+      })
+      curY += Math.round(38 * scale) + Math.max(0, dishLines.length - 1) * lineStep
+
+      // Flush-Indented Accompaniment Sub-note
+      if (item.note) {
+        const noteSize = Math.round(18.5 * scale)
+        const noteStep = Math.round(23 * scale)
+        ctx.font = `500 ${noteSize}px "Inter", sans-serif`
+        ctx.fillStyle = '#64748B'
+        const noteLines = wrapTextLines(ctx, item.note, maxItemW)
+        noteLines.forEach((nLine, nIdx) => {
+          ctx.fillText(nLine, colX + dishIndentX, curY + noteSize - 4 + nIdx * noteStep)
+        })
+        curY += Math.round(26 * scale) + Math.max(0, noteLines.length - 1) * noteStep
+      }
+    })
+
+    curY += Math.round(18 * scale)
+  })
+
+  return curY
+}
+
+const computeQuotationPages = (ctx) => {
+  const FOOTER_TOP_Y = 1924
+  const marginX = 88
+  const rightEdge = CANVAS_W - marginX
+  const summaryBottomY = measureSummaryCardBottomY(ctx)
+  const activeNotes = form.footerNotes.map((n) => n.trim()).filter(Boolean)
+  const notesReservedH = activeNotes.length > 0 ? 24 + activeNotes.length * 30 + 24 : 0
+  const menuStartY = summaryBottomY + 46
+  const hasHeading = Boolean(form.serviceHeading.trim())
+  const menuMaxBottomY = FOOTER_TOP_Y - 26 - notesReservedH
+
+  const activeCourses = form.courses
+    .map((c) => ({
+      title: c.title.trim(),
+      timing: c.timing.trim(),
+      items: c.items
+        .filter((it) => it.name.trim())
+        .map((it, idx) => ({
+          dishNumber: idx + 1,
+          name: it.name.trim(),
+          note: it.note.trim()
+        }))
+    }))
+    .filter((c) => c.title || c.items.length)
+    .map((c, cIdx) => ({ ...c, courseNumber: cIdx + 1 }))
+
+  if (!activeCourses.length) {
+    return { isTwoColumnGlobal: false, pages: [{ col1: [], col2: [], scale: 1 }] }
+  }
+
+  // Pass 1: Test Single-Column Fit on Page 1
+  const singleColTopY = hasHeading ? menuStartY + 68 : menuStartY
+  const singleColAvailH = menuMaxBottomY - singleColTopY
+  const singleColW = rightEdge - marginX - 24
+  const totalSingleH = activeCourses.reduce((sum, c) => sum + measureSliceTotalH(ctx, c, singleColW, 1), 0)
+
+  if (totalSingleH <= singleColAvailH) {
+    return {
+      isTwoColumnGlobal: false,
+      pages: [{ col1: activeCourses, col2: [], scale: 1 }]
+    }
+  }
+
+  // Pass 2: 2-Column Multi-Page Packing (Courses never split across pages)
+  const twoColTopY = menuStartY + 68 // Reserves space for heading / Page X of Y
+  const colAvailH = menuMaxBottomY - twoColTopY
+  const twoColW = CANVAS_W / 2 - marginX - 40
+
+  const trySplitCourseAcrossColumns = (course, remCol1H, remCol2H, scale) => {
+    const headerH = measureCourseHeaderH(ctx, course, twoColW, scale).h
+    const gapH = Math.round(18 * scale)
+    if (remCol1H < headerH + gapH) return null
+
+    let used1 = headerH
+    let splitIdx = 0
+    for (let i = 0; i < course.items.length; i++) {
+      const dH = measureDishItemH(ctx, course.items[i], twoColW, scale)
+      if (used1 + dH + gapH <= remCol1H) {
+        used1 += dH
+        splitIdx = i + 1
+      } else {
+        break
+      }
+    }
+
+    if (splitIdx === 0) return null
+    if (splitIdx === course.items.length) {
+      return {
+        slice1: course,
+        used1: used1 + gapH,
+        slice2: null,
+        used2: 0
+      }
+    }
+
+    const slice1 = { ...course, items: course.items.slice(0, splitIdx) }
+    const slice2 = { ...course, items: course.items.slice(splitIdx) } // Repeats Course Header & continues numbering
+    const used2 = measureSliceTotalH(ctx, slice2, twoColW, scale)
+
+    if (used2 <= remCol2H) {
+      return { slice1, used1: used1 + gapH, slice2, used2 }
+    }
+    return null
+  }
+
+  const pages = []
+  let curPage = { col1: [], col2: [], scale: 1 }
+  let inCol2 = false
+  let col1Used = 0
+  let col2Used = 0
+
+  const pushAndResetPage = () => {
+    if (curPage.col1.length || curPage.col2.length) pages.push(curPage)
+    curPage = { col1: [], col2: [], scale: 1 }
+    inCol2 = false
+    col1Used = 0
+    col2Used = 0
+  }
+
+  for (const course of activeCourses) {
+    const fullH = measureSliceTotalH(ctx, course, twoColW, 1)
+    const isUnbreakableCourse = course.items.length <= COURSE_UNBREAKABLE_MAX && fullH <= colAvailH
+
+    if (isUnbreakableCourse) {
+      if (!inCol2 && col1Used + fullH <= colAvailH) {
+        curPage.col1.push(course)
+        col1Used += fullH
+      } else if (!inCol2 && fullH <= colAvailH) {
+        inCol2 = true
+        curPage.col2.push(course)
+        col2Used += fullH
+      } else if (inCol2 && col2Used + fullH <= colAvailH) {
+        curPage.col2.push(course)
+        col2Used += fullH
+      } else {
+        pushAndResetPage()
+        curPage.col1.push(course)
+        col1Used += fullH
+      }
+      continue
+    }
+
+    // Splittable Course (> 15 items, or taller than 1 column): can split Col1 -> Col2 on SAME page, NEVER across pages
+    if (!inCol2) {
+      const splitAttempt = trySplitCourseAcrossColumns(course, colAvailH - col1Used, colAvailH, 1)
+      if (splitAttempt) {
+        curPage.col1.push(splitAttempt.slice1)
+        col1Used += splitAttempt.used1
+        if (splitAttempt.slice2) {
+          inCol2 = true
+          curPage.col2.push(splitAttempt.slice2)
+          col2Used += splitAttempt.used2
+        }
+        continue
+      }
+      // If Col1 had partial content and course fits wholly in empty Col2
+      if (col1Used > 0 && fullH <= colAvailH) {
+        inCol2 = true
+        curPage.col2.push(course)
+        col2Used += fullH
+        continue
+      }
+    } else if (col2Used + fullH <= colAvailH) {
+      curPage.col2.push(course)
+      col2Used += fullH
+      continue
+    }
+
+    // Move entire large course to a fresh page so it never splits across pages
+    if (col1Used > 0 || col2Used > 0) pushAndResetPage()
+
+    let chosenScale = 1
+    let packed = null
+    for (let s = 1; s >= 0.7; s = Math.round((s - 0.03) * 100) / 100) {
+      const attempt = trySplitCourseAcrossColumns(course, colAvailH, colAvailH, s)
+      if (attempt) {
+        chosenScale = s
+        packed = attempt
+        break
+      }
+    }
+
+    if (packed) {
+      curPage.scale = Math.min(curPage.scale, chosenScale)
+      curPage.col1.push(packed.slice1)
+      col1Used += packed.used1
+      if (packed.slice2) {
+        inCol2 = true
+        curPage.col2.push(packed.slice2)
+        col2Used += packed.used2
+      }
+    } else {
+      // Extreme manual-input fallback: slices across Col 1 -> Col 2 -> Next Page with zero clipping
+      const safeScale = 0.74
+      const takeFittingItems = (items, availH) => {
+        const headerH = measureCourseHeaderH(ctx, course, twoColW, safeScale).h
+        const gapH = Math.round(18 * safeScale)
+        let used = headerH
+        let count = 0
+        for (let i = 0; i < items.length; i++) {
+          const dH = measureDishItemH(ctx, items[i], twoColW, safeScale)
+          if (used + dH + gapH <= availH || count === 0) {
+            used += dH
+            count++
+          } else {
+            break
+          }
+        }
+        return {
+          taken: items.slice(0, count),
+          rest: items.slice(count),
+          used: used + gapH
+        }
+      }
+
+      let remaining = [...course.items]
+      while (remaining.length > 0) {
+        curPage.scale = Math.min(curPage.scale, safeScale)
+        const c1 = takeFittingItems(remaining, colAvailH)
+        curPage.col1.push({ ...course, items: c1.taken })
+        col1Used = c1.used
+        remaining = c1.rest
+
+        if (remaining.length > 0) {
+          const c2 = takeFittingItems(remaining, colAvailH)
+          inCol2 = true
+          curPage.col2.push({ ...course, items: c2.taken })
+          col2Used = c2.used
+          remaining = c2.rest
+        }
+
+        if (remaining.length > 0) {
+          pushAndResetPage()
+        }
+      }
+    }
+  }
+
+  if (curPage.col1.length || curPage.col2.length) pages.push(curPage)
+
+  const isTwoColumnGlobal = pages.length > 1 || pages[0].col2.length > 0
+  return { isTwoColumnGlobal, pages }
+}
+
+const renderAllPages = async () => {
+  if (typeof window === 'undefined') return
+  const mCtx = getMeasureCtx()
+  const { isTwoColumnGlobal, pages } = computeQuotationPages(mCtx)
+
+  isTwoColumnLayout.value = isTwoColumnGlobal
+  if (pageCount.value !== pages.length) {
+    pageCount.value = pages.length
+    await nextTick()
+  }
+  pageCanvasRefs.length = pages.length
+
+  pages.forEach((pageSlice, idx) => {
+    renderSinglePageCanvas(pageCanvasRefs[idx], pageSlice, idx, pages.length, isTwoColumnGlobal)
+  })
+}
+
 const scheduleRender = () => {
   if (typeof window === 'undefined') return
   if (rafId) cancelAnimationFrame(rafId)
   rafId = requestAnimationFrame(() => {
-    renderQuotationCanvas()
+    renderAllPages()
     rafId = null
   })
 }
 
-watch(form, () => scheduleRender(), { deep: true })
+watch(
+  form,
+  () => {
+    if (!isSuppressingDirty) isDirty.value = true
+    scheduleRender()
+  },
+  { deep: true }
+)
 
-// -- 5. CONTINUOUS TIMESTAMP FILENAME & ZERO-DEPENDENCY EXPORTS --
+// -- 5. CONTINUOUS TIMESTAMP FILENAME & MULTI-PAGE EXPORTS --
 const getContinuousTimestamp = () => {
   const now = new Date()
   const pad = (n) => String(n).padStart(2, '0')
@@ -1539,59 +1974,102 @@ const getContinuousTimestamp = () => {
   )
 }
 
-const buildSlugFilename = (ext) => {
+const buildSlugFilename = (ext, pageIndex = null, totalPages = 1, fixedTs = null) => {
   const cleanClient = (form.clientName || 'Guest')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
-  return `CAPS-Quotation-${cleanClient || 'banquet'}-${getContinuousTimestamp()}.${ext}`
+  const ts = fixedTs || getContinuousTimestamp()
+  const pageSuffix = totalPages > 1 && pageIndex !== null ? `-p${pageIndex + 1}` : ''
+  return `CAPS-Quotation-${cleanClient || 'banquet'}-${ts}${pageSuffix}.${ext}`
 }
 
-const canvasToJpegBlob = () =>
-  new Promise((resolve, reject) => {
-    renderQuotationCanvas()
-    a4CanvasRef.value.toBlob(
-      (blob) => (blob ? resolve(blob) : reject(new Error('Canvas export failed'))),
-      'image/jpeg',
-      0.94
+const canvasPagesToJpegBlobs = async () => {
+  await renderAllPages()
+  const activeCanvases = pageCanvasRefs.slice(0, pageCount.value).filter(Boolean)
+  return Promise.all(
+    activeCanvases.map(
+      (canvas) =>
+        new Promise((resolve, reject) => {
+          canvas.toBlob(
+            (blob) => (blob ? resolve(blob) : reject(new Error('Canvas export failed'))),
+            'image/jpeg',
+            0.94
+          )
+        })
+    )
+  )
+}
+
+const buildA4PdfBlobFromJpegs = async (jpegBlobs) => {
+  const jpegBuffers = await Promise.all(
+    jpegBlobs.map(async (b) => new Uint8Array(await b.arrayBuffer()))
+  )
+  const enc = new TextEncoder()
+  const numPages = jpegBuffers.length
+
+  const chunks = []
+  const offsets = [0] // index 0 reserved for PDF free object
+  let byteCursor = 0
+
+  const pushBytes = (bytes) => {
+    chunks.push(bytes)
+    byteCursor += bytes.byteLength
+  }
+
+  // Binary PDF 1.4 Header
+  pushBytes(new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d, 0x31, 0x2e, 0x34, 0x0a, 0x25, 0xff, 0xff, 0xff, 0xff, 0x0a]))
+
+  // 1 0 obj: Catalog
+  offsets[1] = byteCursor
+  pushBytes(enc.encode('1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n'))
+
+  // 2 0 obj: Pages Root with all Page Kids
+  const kidsRefs = jpegBuffers.map((_, idx) => `${3 + idx * 3} 0 R`).join(' ')
+  offsets[2] = byteCursor
+  pushBytes(enc.encode(`2 0 obj\n<< /Type /Pages /Kids [${kidsRefs}] /Count ${numPages} >>\nendobj\n`))
+
+  const streamCmd = 'q\n595.28 0 0 841.89 0 0 cm\n/Im0 Do\nQ'
+
+  jpegBuffers.forEach((jpegBytes, idx) => {
+    const pageObjId = 3 + idx * 3
+    const imgObjId = 4 + idx * 3
+    const contentObjId = 5 + idx * 3
+
+    offsets[pageObjId] = byteCursor
+    pushBytes(
+      enc.encode(
+        `${pageObjId} 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im0 ${imgObjId} 0 R >> >> /Contents ${contentObjId} 0 R >>\nendobj\n`
+      )
+    )
+
+    offsets[imgObjId] = byteCursor
+    pushBytes(
+      enc.encode(
+        `${imgObjId} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${CANVAS_W} /Height ${CANVAS_H} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.byteLength} >>\nstream\n`
+      )
+    )
+    pushBytes(jpegBytes)
+    pushBytes(enc.encode('\nendstream\nendobj\n'))
+
+    offsets[contentObjId] = byteCursor
+    pushBytes(
+      enc.encode(`${contentObjId} 0 obj\n<< /Length ${streamCmd.length} >>\nstream\n${streamCmd}\nendstream\nendobj\n`)
     )
   })
 
-const buildA4PdfBlobFromJpeg = async (jpegBlob) => {
-  const jpegBytes = new Uint8Array(await jpegBlob.arrayBuffer())
-  const enc = new TextEncoder()
-
-  const header = new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d, 0x31, 0x2e, 0x34, 0x0a, 0x25, 0xff, 0xff, 0xff, 0xff, 0x0a])
-  const obj1 = enc.encode('1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n')
-  const obj2 = enc.encode('2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n')
-  const obj3 = enc.encode('3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>\nendobj\n')
-  const obj4Head = enc.encode(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${CANVAS_W} /Height ${CANVAS_H} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.byteLength} >>\nstream\n`)
-  const obj4Tail = enc.encode('\nendstream\nendobj\n')
-  const streamCmd = 'q\n595.28 0 0 841.89 0 0 cm\n/Im0 Do\nQ'
-  const obj5 = enc.encode(`5 0 obj\n<< /Length ${streamCmd.length} >>\nstream\n${streamCmd}\nendstream\nendobj\n`)
-
-  const off1 = header.byteLength
-  const off2 = off1 + obj1.byteLength
-  const off3 = off2 + obj2.byteLength
-  const off4 = off3 + obj3.byteLength
-  const off5 = off4 + obj4Head.byteLength + jpegBytes.byteLength + obj4Tail.byteLength
-  const xrefOff = off5 + obj5.byteLength
-
+  const totalObjects = 3 + numPages * 3
+  const xrefOff = byteCursor
   const pad10 = (n) => String(n).padStart(10, '0')
-  const xrefAndTrailer = enc.encode(
-    'xref\n0 6\n' +
-    '0000000000 65535 f \n' +
-    `${pad10(off1)} 00000 n \n` +
-    `${pad10(off2)} 00000 n \n` +
-    `${pad10(off3)} 00000 n \n` +
-    `${pad10(off4)} 00000 n \n` +
-    `${pad10(off5)} 00000 n \n` +
-    `trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xrefOff}\n%%EOF`
-  )
 
-  const chunks = [header, obj1, obj2, obj3, obj4Head, jpegBytes, obj4Tail, obj5, xrefAndTrailer]
-  const totalLen = chunks.reduce((sum, c) => sum + c.byteLength, 0)
-  const pdfBuffer = new Uint8Array(totalLen)
+  let xrefStr = `xref\n0 ${totalObjects}\n0000000000 65535 f \n`
+  for (let id = 1; id < totalObjects; id++) {
+    xrefStr += `${pad10(offsets[id])} 00000 n \n`
+  }
+  xrefStr += `trailer\n<< /Size ${totalObjects} /Root 1 0 R >>\nstartxref\n${xrefOff}\n%%EOF`
+  pushBytes(enc.encode(xrefStr))
+
+  const pdfBuffer = new Uint8Array(byteCursor)
   let ptr = 0
   for (const chunk of chunks) {
     pdfBuffer.set(chunk, ptr)
@@ -1609,14 +2087,19 @@ const triggerBlobDownload = (blob, filename) => {
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
-  setTimeout(() => URL.revokeObjectURL(url), 1500)
+  setTimeout(() => URL.revokeObjectURL(url), 2000)
 }
 
 const downloadJpg = async () => {
   isExporting.value = true
   try {
-    const blob = await canvasToJpegBlob()
-    triggerBlobDownload(blob, buildSlugFilename('jpg'))
+    const blobs = await canvasPagesToJpegBlobs()
+    const ts = getContinuousTimestamp()
+    for (let i = 0; i < blobs.length; i++) {
+      if (i > 0) await new Promise((r) => setTimeout(r, 220))
+      triggerBlobDownload(blobs[i], buildSlugFilename('jpg', i, blobs.length, ts))
+    }
+    isDirty.value = false
   } finally {
     isExporting.value = false
   }
@@ -1625,9 +2108,10 @@ const downloadJpg = async () => {
 const downloadPdf = async () => {
   isExporting.value = true
   try {
-    const jpgBlob = await canvasToJpegBlob()
-    const pdfBlob = await buildA4PdfBlobFromJpeg(jpgBlob)
+    const jpgBlobs = await canvasPagesToJpegBlobs()
+    const pdfBlob = await buildA4PdfBlobFromJpegs(jpgBlobs)
     triggerBlobDownload(pdfBlob, buildSlugFilename('pdf'))
+    isDirty.value = false
   } finally {
     isExporting.value = false
   }
@@ -1646,16 +2130,22 @@ const buildWhatsAppMessage = () => {
     form.serviceHeading ? `*${form.serviceHeading}*` : '*MENU*'
   ].filter(Boolean)
 
+  let activeIdx = 0
   form.courses.forEach((c) => {
     const validItems = c.items.filter((i) => i.name.trim())
     if (!c.title.trim() && !validItems.length) return
-    lines.push(`\n*${c.title.trim()}${c.timing.trim() ? ' ' + c.timing.trim() : ''}*`)
-    validItems.forEach((it) => {
-      lines.push(`• ${it.name.trim()}${it.note.trim() ? ' (' + it.note.trim() + ')' : ''}`)
+    activeIdx++
+    lines.push(`\n*${activeIdx}. ${c.title.trim() || 'COURSE'}${c.timing.trim() ? ' ' + c.timing.trim() : ''}*`)
+    validItems.forEach((it, dIdx) => {
+      lines.push(`${dIdx + 1}. ${it.name.trim()}${it.note.trim() ? ' (' + it.note.trim() + ')' : ''}`)
     })
   })
 
-  if (form.footerNote.trim()) lines.push(`\n_${form.footerNote.trim()}_`)
+  const activeNotes = form.footerNotes.map((n) => n.trim()).filter(Boolean)
+  if (activeNotes.length) {
+    lines.push('')
+    activeNotes.forEach((n) => lines.push(`_${n}_`))
+  }
   lines.push('\nwww.capsfamily.in | Events: 8848369567')
   return lines.join('\n')
 }
@@ -1664,19 +2154,26 @@ const shareNativeFile = async () => {
   isExporting.value = true
   try {
     const isPdf = shareFormat.value === 'pdf'
-    const jpgBlob = await canvasToJpegBlob()
-    const finalBlob = isPdf ? await buildA4PdfBlobFromJpeg(jpgBlob) : jpgBlob
-    const filename = buildSlugFilename(isPdf ? 'pdf' : 'jpg')
-    const file = new File([finalBlob], filename, { type: finalBlob.type })
+    const jpgBlobs = await canvasPagesToJpegBlobs()
+    const ts = getContinuousTimestamp()
 
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    const files = isPdf
+      ? [new File([await buildA4PdfBlobFromJpegs(jpgBlobs)], buildSlugFilename('pdf', null, 1, ts), { type: 'application/pdf' })]
+      : jpgBlobs.map((blob, idx) => new File([blob], buildSlugFilename('jpg', idx, jpgBlobs.length, ts), { type: 'image/jpeg' }))
+
+    if (navigator.canShare && navigator.canShare({ files })) {
       await navigator.share({
-        files: [file],
+        files,
         title: `Hotel CAPS Quotation - ${form.clientName || 'Guest'}`,
         text: 'Official event quotation from Hotel CAPS, Koduvayur.'
       })
+      isDirty.value = false
     } else {
-      triggerBlobDownload(finalBlob, filename)
+      for (let i = 0; i < files.length; i++) {
+        if (i > 0) await new Promise((r) => setTimeout(r, 220))
+        triggerBlobDownload(files[i], files[i].name)
+      }
+      isDirty.value = false
     }
   } catch (err) {
     if (err?.name !== 'AbortError') console.error(err)
@@ -1707,10 +2204,7 @@ const warmUpCanvasFonts = async () => {
       document.fonts.load('600 24px "Inter"'),
       document.fonts.load('700 32px "Inter"')
     ])
-    const scratch = document.createElement('canvas')
-    scratch.width = 10
-    scratch.height = 10
-    const sCtx = scratch.getContext('2d')
+    const sCtx = getMeasureCtx()
     ;[
       '400 20px "Faculty Glyphic"',
       '600 20px "Faculty Glyphic"',
@@ -1726,6 +2220,8 @@ const warmUpCanvasFonts = async () => {
 }
 
 onMounted(async () => {
+  window.addEventListener('beforeunload', handleBeforeUnload)
+
   logoImage = new Image()
   logoImage.onload = () => scheduleRender()
   logoImage.src = '/images/caps-solid-logo.png'
@@ -1742,6 +2238,7 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', handleBeforeUnload)
   if (rafId) cancelAnimationFrame(rafId)
 })
 
